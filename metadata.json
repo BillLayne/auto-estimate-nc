@@ -1,0 +1,7 @@
+{
+  "name": "auto estimate with compare two estimates",
+  "description": "A professional AI-driven auto damage estimation tool for Bill Layne Insurance Agency, leveraging Gemini 3 Pro with Google Search grounding for real-time NC part pricing and labor rates.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
