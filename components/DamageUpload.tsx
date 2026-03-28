@@ -31,18 +31,45 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
   const subTitle = customSubtitle || (isDoc ? "Scan photos of each page or upload PDF/Images." : "Add multiple clear photos from different angles.");
   const buttonText = customButtonText || (isDoc ? `Analyze Estimate (${previews.length} Pages)` : `Analyze All Photos (${previews.length})`);
   
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const convertFileToJpegDataUrl = async (file: File): Promise<string> => {
+    try {
+      const bitmap = await createImageBitmap(file);
+      const MAX = 4096;
+      let w = bitmap.width, h = bitmap.height;
+      if (w > MAX || h > MAX) {
+        const s = MAX / Math.max(w, h);
+        w = Math.round(w * s);
+        h = Math.round(h * s);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(bitmap, 0, 0, w, h);
+      bitmap.close();
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      canvas.width = 0;
+      canvas.height = 0;
+      return dataUrl;
+    } catch {
+      // Fallback to FileReader for formats canvas can't handle
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
     if (fileList) {
       const files = Array.from(fileList);
-      files.forEach((file: File) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64String = reader.result as string;
-          setPreviews(prev => [...prev, base64String]);
-        };
-        reader.readAsDataURL(file);
-      });
+      for (const file of files) {
+        const dataUrl = await convertFileToJpegDataUrl(file);
+        setPreviews(prev => [...prev, dataUrl]);
+      }
     }
   };
 
@@ -138,7 +165,7 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
           type="file" 
           ref={fileInputRef} 
           onChange={handleFileChange} 
-          accept={isDoc ? "image/*,application/pdf" : "image/*"} 
+          accept={isDoc ? "image/*,application/pdf,.heic,.heif" : "image/*,.heic,.heif,image/heic,image/heif"} 
           multiple
           className="hidden" 
         />

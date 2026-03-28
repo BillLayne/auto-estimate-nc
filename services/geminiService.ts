@@ -108,7 +108,7 @@ export async function extractVinFromImage(base64Image: string): Promise<string |
       MODEL,
       [{
         parts: [
-          { inlineData: { data: base64Image.split(',')[1], mimeType: 'image/jpeg' } },
+          { inlineData: { data: base64Image.split(',')[1], mimeType: (base64Image.match(/^data:(.*?);/)?.[1]) || 'image/jpeg' } },
           { text: "Examine this image. Find the Vehicle Identification Number (VIN). It is a 17-character alphanumeric string. It might be a barcode or text on a sticker/plate. Return ONLY the raw VIN string. If no VIN is found, return 'null'." }
         ]
       }]
