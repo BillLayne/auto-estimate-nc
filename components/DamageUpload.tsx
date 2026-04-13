@@ -22,6 +22,7 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
 }) => {
   const [previews, setPreviews] = useState<string[]>([]);
   const [showScanner, setShowScanner] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isDoc = mode === 'document';
@@ -31,9 +32,54 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
   const subTitle = customSubtitle || (isDoc ? "Scan photos of each page or upload PDF/Images." : "Add multiple clear photos from different angles.");
   const buttonText = customButtonText || (isDoc ? `Analyze Estimate (${previews.length} Pages)` : `Analyze All Photos (${previews.length})`);
   
-  const convertFileToJpegDataUrl = async (file: File): Promise<string> => {
+  const readBlobAsDataUrl = (blob: Blob): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  const isPdfFile = (file: File) =>
+    file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+
+  const isHeicFile = (file: File) => {
+    const fileType = file.type.toLowerCase();
+    const fileName = file.name.toLowerCase();
+    const hasHeicExtension = fileName.endsWith('.heic') || fileName.endsWith('.heif');
+    return (
+      fileType === 'image/heic' ||
+      fileType === 'image/heif' ||
+      (fileType === 'application/octet-stream' && hasHeicExtension) ||
+      hasHeicExtension
+    );
+  };
+
+  const normalizeImageBlob = async (file: File): Promise<Blob> => {
+    if (!isHeicFile(file)) {
+      return file;
+    }
+
+    const { default: heic2any } = await import('heic2any');
+    const converted = await heic2any({
+      blob: file,
+      toType: 'image/jpeg',
+      quality: 0.9
+    });
+
+    return Array.isArray(converted) ? converted[0] : converted;
+  };
+
+  const convertFileToUploadData = async (file: File): Promise<string> => {
+    if (isPdfFile(file)) {
+      return readBlobAsDataUrl(file);
+    }
+
+    const sourceBlob = await normalizeImageBlob(file);
+
     try {
-      const bitmap = await createImageBitmap(file);
+      const bitmap = await createImageBitmap(sourceBlob);
       const MAX = 4096;
       let w = bitmap.width, h = bitmap.height;
       if (w > MAX || h > MAX) {
@@ -52,25 +98,27 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
       canvas.height = 0;
       return dataUrl;
     } catch {
-      // Fallback to FileReader for formats canvas can't handle
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+      return readBlobAsDataUrl(sourceBlob);
     }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
     if (fileList) {
+      setUploadError(null);
       const files = Array.from(fileList);
       for (const file of files) {
-        const dataUrl = await convertFileToJpegDataUrl(file);
-        setPreviews(prev => [...prev, dataUrl]);
+        try {
+          const dataUrl = await convertFileToUploadData(file);
+          setPreviews(prev => [...prev, dataUrl]);
+        } catch (error) {
+          console.error('File conversion failed:', error);
+          setUploadError(`We couldn't read "${file.name}". Please try exporting that photo as JPG or PNG and upload it again.`);
+        }
       }
     }
+
+    e.target.value = '';
   };
 
   const removeImage = (index: number) => {
@@ -156,7 +204,7 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
               </svg>
             </div>
             <span className="text-[10px] font-bold text-slate-500 uppercase">
-              Upload PDF
+              Upload Files
             </span>
           </button>
         </div>
@@ -180,9 +228,12 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
           </button>
           <p className="text-center text-xs text-slate-400">
             {isDoc 
-              ? "We can read clear photos of paper estimates or PDF files." 
-              : "Multiple angles help Gemini AI identify hidden damage and provide a more accurate guide."}
+              ? "We can read clear photos of paper estimates or PDF files, including iPhone HEIC images." 
+              : "Multiple angles help Gemini AI identify hidden damage and provide a more accurate guide, including iPhone HEIC photos."}
           </p>
+          {uploadError && (
+            <p className="text-center text-sm text-red-600">{uploadError}</p>
+          )}
         </div>
       </div>
 
