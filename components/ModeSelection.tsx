@@ -54,10 +54,10 @@ const ModeSelection: React.FC<ModeSelectionProps> = ({ setStep }) => {
     <div className="animate-fadeIn">
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative overflow-hidden rounded-3xl shadow-card-lg mb-8 bg-brand-navy-deep md:min-h-[500px] md:flex md:items-center">
-        {/* MOBILE: scene as an image band on top (stacked, no text overlap) */}
+        {/* MOBILE: balanced scene crop as an image band on top (stacked, no text overlap) */}
         <div
-          className="md:hidden h-64 bg-cover bg-no-repeat bg-[position:58%_20%]"
-          style={{ backgroundImage: `url("${IMAGES.heroScene}")` }}
+          className="md:hidden h-64 bg-cover bg-no-repeat bg-center"
+          style={{ backgroundImage: `url("${IMAGES.heroSceneMobile}")` }}
           role="img"
           aria-label="A phone photographing a dented car, with an instant repair estimate of $1,248"
         />
