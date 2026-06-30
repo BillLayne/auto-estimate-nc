@@ -117,7 +117,7 @@ const VinScanner: React.FC<VinScannerProps> = ({ onVinFound, onClose }) => {
         <button 
           onClick={handleCapture}
           disabled={isAnalyzing || !!error}
-          className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-full shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full bg-brand-gold hover:bg-brand-gold-lt text-brand-navy-deep font-bold py-4 rounded-full shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isAnalyzing ? 'Reading VIN...' : (
             <>

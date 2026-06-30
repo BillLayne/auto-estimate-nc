@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { VehicleInfo, CustomerInfo } from '../types';
 import { lookupVehicleByVin } from '../services/geminiService';
 import VinScanner from './VinScanner';
+import StepIndicator from './StepIndicator';
 
 interface VehicleFormProps {
   vehicleData: VehicleInfo;
@@ -10,14 +11,16 @@ interface VehicleFormProps {
   onVehicleChange: (data: VehicleInfo) => void;
   onCustomerChange: (data: CustomerInfo) => void;
   onNext: () => void;
+  onBack?: () => void;
 }
 
-const VehicleForm: React.FC<VehicleFormProps> = ({ 
-  vehicleData, 
-  customerData, 
-  onVehicleChange, 
-  onCustomerChange, 
-  onNext 
+const VehicleForm: React.FC<VehicleFormProps> = ({
+  vehicleData,
+  customerData,
+  onVehicleChange,
+  onCustomerChange,
+  onNext,
+  onBack
 }) => {
   const [isLookingUp, setIsLookingUp] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
@@ -62,16 +65,23 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
 
   return (
     <>
-      <div className="bg-white rounded-2xl shadow-sm border p-6 md:p-8 max-w-2xl mx-auto">
+      <StepIndicator current={1} />
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200/70 p-5 sm:p-8 max-w-2xl mx-auto animate-fadeIn">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-slate-800">New Inquiry Intake</h2>
-          <p className="text-slate-500">Please provide your contact details and vehicle information.</p>
+          {onBack && (
+            <button onClick={onBack} className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-brand-navy mb-3 -ml-1">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+              All tools
+            </button>
+          )}
+          <h2 className="text-2xl font-bold text-slate-800 font-display">Tell us about you &amp; your vehicle</h2>
+          <p className="text-slate-500 mt-1">Quick details so we can tailor your estimate. Takes about a minute.</p>
         </div>
-        
+
         <div className="space-y-6">
           {/* Customer Information Section */}
           <section className="space-y-4">
-            <h3 className="text-xs font-black text-blue-900 uppercase tracking-widest border-b pb-2">Customer Information</h3>
+            <h3 className="text-xs font-black text-brand-navy uppercase tracking-widest border-b pb-2">Customer Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">First Name</label>
@@ -81,7 +91,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   value={customerData.firstName}
                   onChange={handleCustomerChange}
                   placeholder="John"
-                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-navy focus:border-brand-navy outline-none transition-all text-base"
                 />
               </div>
               <div>
@@ -92,7 +102,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   value={customerData.lastName}
                   onChange={handleCustomerChange}
                   placeholder="Doe"
-                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-navy focus:border-brand-navy outline-none transition-all text-base"
                 />
               </div>
             </div>
@@ -104,7 +114,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                 value={customerData.address}
                 onChange={handleCustomerChange}
                 placeholder="123 Street Ave, City, NC"
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-navy focus:border-brand-navy outline-none transition-all text-base"
               />
             </div>
             <div>
@@ -115,14 +125,14 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                 value={customerData.email}
                 onChange={handleCustomerChange}
                 placeholder="john.doe@example.com"
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-navy focus:border-brand-navy outline-none transition-all text-base"
               />
             </div>
           </section>
 
           {/* Vehicle Information Section */}
           <section className="space-y-4 pt-4">
-            <h3 className="text-xs font-black text-blue-900 uppercase tracking-widest border-b pb-2">Vehicle Information</h3>
+            <h3 className="text-xs font-black text-brand-navy uppercase tracking-widest border-b pb-2">Vehicle Information</h3>
             <div className="relative">
               <label className="block text-sm font-medium text-slate-700 mb-1">VIN Number (Optional)</label>
               <div className="flex flex-col sm:flex-row gap-2">
@@ -132,7 +142,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   value={vehicleData.vin}
                   onChange={handleVehicleChange}
                   placeholder="17-character VIN"
-                  className="flex-grow px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all font-mono uppercase"
+                  className="flex-grow px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-navy focus:border-brand-navy outline-none transition-all text-base font-mono uppercase"
                 />
                 <div className="flex gap-2">
                   <button
@@ -147,10 +157,10 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                     type="button"
                     onClick={() => handleVinLookup()}
                     disabled={isLookingUp || vehicleData.vin.length < 11}
-                    className={`px-4 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${isLookingUp || vehicleData.vin.length < 11 ? 'bg-slate-100 text-slate-400' : 'bg-blue-50 text-blue-600 hover:bg-blue-100 active:scale-95'}`}
+                    className={`px-4 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${isLookingUp || vehicleData.vin.length < 11 ? 'bg-slate-100 text-slate-400' : 'bg-blue-50 text-brand-navy hover:bg-blue-100 active:scale-95'}`}
                   >
                     {isLookingUp ? (
-                      <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-5 h-5 border-2 border-brand-navy border-t-transparent rounded-full animate-spin"></div>
                     ) : (
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -171,7 +181,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   value={vehicleData.year}
                   onChange={handleVehicleChange}
                   placeholder="e.g. 2024"
-                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-navy focus:border-brand-navy outline-none transition-all text-base"
                 />
               </div>
               <div>
@@ -182,7 +192,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   value={vehicleData.mileage}
                   onChange={handleVehicleChange}
                   placeholder="e.g. 45,000"
-                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-navy focus:border-brand-navy outline-none transition-all text-base"
                 />
               </div>
             </div>
@@ -196,7 +206,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   value={vehicleData.make}
                   onChange={handleVehicleChange}
                   placeholder="e.g. Toyota"
-                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-navy focus:border-brand-navy outline-none transition-all text-base"
                 />
               </div>
               <div>
@@ -207,19 +217,23 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   value={vehicleData.model}
                   onChange={handleVehicleChange}
                   placeholder="e.g. Camry"
-                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-navy focus:border-brand-navy outline-none transition-all text-base"
                 />
               </div>
             </div>
           </section>
 
-          <button 
+          <button
             onClick={onNext}
             disabled={!isFormValid}
-            className={`w-full py-4 rounded-xl font-semibold text-white transition-all shadow-lg ${isFormValid ? 'bg-blue-600 hover:bg-blue-700 active:scale-95' : 'bg-slate-300 cursor-not-allowed'}`}
+            className={`w-full py-4 rounded-xl font-bold text-white transition-all shadow-lg flex items-center justify-center gap-2 ${isFormValid ? 'bg-brand-navy hover:bg-brand-navy-dk active:scale-[0.98]' : 'bg-slate-300 cursor-not-allowed'}`}
           >
-            Capture Damage Details
+            Continue to Photos
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
           </button>
+          {!isFormValid && (
+            <p className="text-center text-xs text-slate-400 mt-2">Fill in your name and the year, make, model &amp; mileage to continue.</p>
+          )}
         </div>
       </div>
 

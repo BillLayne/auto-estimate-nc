@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { AppStep } from '../types';
+import { AGENCY } from '../config';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -8,48 +9,63 @@ interface LayoutProps {
   setStep: (step: AppStep) => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, activeStep, setStep }) => {
+const LOGO_WHITE = 'https://i.imgur.com/lxu9nfT.png'; // agency logo, white-on-dark
+
+const Layout: React.FC<LayoutProps> = ({ children, setStep }) => {
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="bg-blue-900 text-white shadow-lg sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div 
-            className="flex items-center gap-3 cursor-pointer" 
+      {/* ── Header ─────────────────────────────────────────── */}
+      <header className="sticky top-0 z-50 bg-gradient-to-r from-brand-navy-deep via-brand-navy to-brand-navy-dk text-white shadow-lg border-b-2 border-brand-gold">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center">
+          <button
+            className="flex items-center gap-3 cursor-pointer"
             onClick={() => setStep(AppStep.ModeSelection)}
+            aria-label="AutoEstimate NC — go to home"
           >
-            <div className="bg-white p-1.5 rounded-lg">
-              <svg className="w-8 h-8 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight">AutoEstimate NC</h1>
-              <p className="text-xs text-blue-200">Bill Layne Insurance Agency</p>
-            </div>
-          </div>
-          <nav className="flex gap-4 sm:gap-6">
-            <button 
-              onClick={() => setStep(AppStep.ModeSelection)}
-              className={`text-sm font-medium transition-colors ${(activeStep === AppStep.Intake || activeStep === AppStep.ModeSelection) ? 'text-white border-b-2 border-white' : 'text-blue-200 hover:text-white'}`}
-            >
-              New Estimate
-            </button>
-            <button 
-              onClick={() => setStep(AppStep.Docs)}
-              className={`text-sm font-medium transition-colors ${activeStep === AppStep.Docs ? 'text-white border-b-2 border-white' : 'text-blue-200 hover:text-white'}`}
-            >
-              System Docs
-            </button>
-          </nav>
+            <img src={LOGO_WHITE} alt="Bill Layne Insurance" className="h-10 w-auto shrink-0" />
+            <h1 className="text-lg sm:text-xl font-bold tracking-tight font-display">AutoEstimate NC</h1>
+          </button>
         </div>
       </header>
-      <main className="flex-grow container max-w-6xl mx-auto px-4 py-8">
+
+      {/* ── Main ───────────────────────────────────────────── */}
+      <main className="flex-grow w-full max-w-6xl mx-auto px-4 py-6 sm:py-8">
         {children}
       </main>
-      <footer className="bg-slate-100 border-t py-8 mt-12">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-slate-500 text-sm">© 2024 Bill Layne Insurance Agency. All Rights Reserved.</p>
-          <p className="text-slate-400 text-xs mt-1">Estimates are provided for informational purposes based on AI analysis of market trends and NC labor averages.</p>
+
+      {/* ── Footer ─────────────────────────────────────────── */}
+      <footer className="bg-brand-navy-deep text-white mt-10 safe-b">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-3">
+              <img src={LOGO_WHITE} alt="Bill Layne Insurance" className="h-10 w-auto" />
+              <div className="leading-tight">
+                <p className="font-bold font-display">{AGENCY.name}</p>
+                <p className="text-xs text-blue-200">{AGENCY.address}</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-2.5">
+              <a href={AGENCY.phoneHref} className="px-4 py-2.5 rounded-xl bg-brand-gold text-brand-navy-deep font-bold text-sm hover:bg-brand-gold-lt transition-colors">
+                {AGENCY.phone}
+              </a>
+              <a href={AGENCY.emailHref} className="px-4 py-2.5 rounded-xl bg-white/10 text-white font-semibold text-sm hover:bg-white/20 transition-colors">
+                Email Us
+              </a>
+              <a href={AGENCY.website} target="_blank" rel="noopener" className="px-4 py-2.5 rounded-xl bg-white/10 text-white font-semibold text-sm hover:bg-white/20 transition-colors">
+                Website
+              </a>
+            </div>
+          </div>
+          <div className="border-t border-white/10 mt-6 pt-5 text-center">
+            <p className="text-xs text-blue-200">© {AGENCY.year} {AGENCY.name}. All Rights Reserved.</p>
+            <p className="text-[11px] text-blue-300/70 mt-1.5 max-w-2xl mx-auto">
+              Estimates are a preliminary AI guide based on photos and NC market averages — not a professional appraisal.
+              Final repair costs are set by a licensed body shop and your insurance adjuster.
+            </p>
+            <button onClick={() => setStep(AppStep.Docs)} className="text-[11px] text-blue-300/50 hover:text-blue-200 mt-3 underline underline-offset-2">
+              How it works
+            </button>
+          </div>
         </div>
       </footer>
     </div>

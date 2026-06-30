@@ -1,0 +1,71 @@
+/**
+ * Central site config — brand + imagery.
+ *
+ * 👉 TO ADD BILL'S IMAGES: paste the imgur URLs below. Leave a value as ''
+ *    (empty string) and the page falls back to an on-brand navy/gold gradient,
+ *    so nothing ever looks broken while you wait on the artwork.
+ */
+
+/** Vite serves /public at the app's base path ('/auto-estimate-nc/'). */
+const asset = (file: string) => `${import.meta.env.BASE_URL}${file}`;
+
+export const IMAGES = {
+  /** Wide banner behind the hero headline (1920×1080 JPG). '' = on-brand gradient only. */
+  heroBackground: '',
+  /**
+   * Transparent graphic shown inside the hero, next to the headline.
+   * Cleaned from Bill's render (i.imgur.com/TORSrKe.png) — the original was an
+   * opaque RGB with a baked-in checkerboard; background knocked out to true
+   * transparency and shipped as an optimized 126KB WebP in /public.
+   */
+  heroForeground: asset('hero-foreground.webp'),
+};
+
+/** Agency contact details — single source of truth for header/footer. */
+export const AGENCY = {
+  name: 'Bill Layne Insurance Agency',
+  phone: '(336) 835-1993',
+  phoneHref: 'tel:+13368351993',
+  email: 'Save@BillLayneInsurance.com',
+  emailHref: 'mailto:Save@BillLayneInsurance.com',
+  address: '1283 N Bridge St, Elkin, NC 28621',
+  website: 'https://www.billlayneinsurance.com',
+  websiteLabel: 'BillLayneInsurance.com',
+  year: 2026,
+};
+
+/**
+ * ⚖️ LEGAL / LIABILITY DISCLAIMERS — single source of truth.
+ *
+ * NOTE: This is strong, plain-language protective wording, but it is NOT a
+ * substitute for legal advice. Have a NC attorney review before relying on it.
+ * Edit these strings here and they update everywhere in the app.
+ */
+export const LEGAL = {
+  /** One-liner shown near the action buttons / upload screens. */
+  short:
+    'Free AI estimate for general information only — not a quote, appraisal, or guarantee. ' +
+    'Actual repair costs may be significantly higher or lower, and photos cannot reveal hidden damage. ' +
+    'Always get a written estimate from a licensed repair shop and confirm coverage with your insurer.',
+
+  /** Active-consent line for the required checkbox before generating results. */
+  consent:
+    'I understand this is AI-generated information for general guidance only — not a quote, appraisal, ' +
+    'guarantee, or professional advice — and that the results may be incomplete or inaccurate.',
+
+  /** Full disclaimer shown on every result/report. */
+  full:
+    'IMPORTANT — PLEASE READ. This tool provides an automated, AI-generated estimate for general ' +
+    'informational and educational purposes only. It is NOT a professional damage appraisal, a repair ' +
+    'quote or final cost, an offer or guarantee of insurance coverage, a promise to pay any claim, or ' +
+    'legal, financial, or professional advice. Estimates are produced by artificial intelligence from the ' +
+    'photos and details you provide; they may be incomplete or inaccurate, and your actual repair cost may ' +
+    'be significantly higher or lower. Photos cannot reveal hidden or structural damage. Always obtain a ' +
+    'written estimate from a licensed repair facility and confirm any coverage, deductible, or claim ' +
+    'decision directly with your insurance company. Using this tool does not file a claim, create an ' +
+    'insurance policy, or create an agent, professional, or fiduciary relationship. This tool is provided ' +
+    '"AS IS" and "AS AVAILABLE," without warranties of any kind, express or implied. To the fullest extent ' +
+    'permitted by law, Bill Layne Insurance Agency and its owners, agents, and employees disclaim all ' +
+    'liability for any loss, damage, or decision arising from your use of, or reliance on, this tool or its ' +
+    'estimates. By using this tool, you acknowledge and agree to these terms.',
+};

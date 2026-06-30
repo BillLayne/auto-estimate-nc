@@ -1,1 +1,13 @@
-node_modules\ndist\n.env\n*.local
+# Dependencies (reinstalled in CI via `npm ci`)
+node_modules/
+
+# Build output (rebuilt in CI via `npm run build`)
+dist/
+
+# Local env / secrets
+.env
+.env.*
+*.local
+
+# Vite cache
+.vite/

@@ -1,6 +1,8 @@
 
 import React, { useRef, useState } from 'react';
 import DocumentScanner from './DocumentScanner';
+import StepIndicator from './StepIndicator';
+import { LEGAL } from '../config';
 
 interface DamageUploadProps {
   onImagesCaptured: (images: string[]) => void;
@@ -23,6 +25,7 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
   const [previews, setPreviews] = useState<string[]>([]);
   const [showScanner, setShowScanner] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [agreed, setAgreed] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isDoc = mode === 'document';
@@ -126,7 +129,7 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
   };
 
   const handleConfirm = () => {
-    if (previews.length > 0) {
+    if (previews.length > 0 && agreed) {
       onImagesCaptured(previews);
     }
   };
@@ -145,18 +148,30 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
 
   return (
     <>
-      <div className="bg-white rounded-2xl shadow-sm border p-6 md:p-8 max-w-2xl mx-auto">
-        <div className="mb-6 flex items-center justify-between">
+      {!isDoc && <StepIndicator current={2} />}
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200/70 p-5 sm:p-8 max-w-2xl mx-auto animate-fadeIn">
+        <div className="mb-5 flex items-start justify-between gap-3">
           <div>
-            <h2 className="text-2xl font-bold text-slate-800">{title}</h2>
-            <p className="text-slate-500">{subTitle}</p>
+            <h2 className="text-2xl font-bold text-slate-800 font-display">{title}</h2>
+            <p className="text-slate-500 mt-1">{subTitle}</p>
           </div>
-          <button onClick={onBack} className="text-slate-400 hover:text-slate-600 p-2">
+          <button onClick={onBack} aria-label="Go back" className="shrink-0 text-slate-400 hover:text-brand-navy p-2 -mr-2">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
           </button>
         </div>
+
+        {!isDoc && (
+          <div className="mb-5 rounded-xl bg-blue-50/70 ring-1 ring-blue-100 p-4">
+            <p className="text-xs font-bold text-brand-navy uppercase tracking-wide mb-2">📸 For the best estimate, add:</p>
+            <ul className="text-sm text-slate-600 space-y-1.5">
+              <li className="flex items-start gap-2.5"><Dot/><span>A <b className="font-semibold text-slate-700">wide shot</b> of the whole damaged area</span></li>
+              <li className="flex items-start gap-2.5"><Dot/><span>A <b className="font-semibold text-slate-700">close-up</b> of the worst dent or scratch</span></li>
+              <li className="flex items-start gap-2.5"><Dot/><span>A <b className="font-semibold text-slate-700">different angle</b> to catch hidden damage</span></li>
+            </ul>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
           {previews.map((src, idx) => (
@@ -179,12 +194,12 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
           ))}
           
           {/* Action Buttons */}
-          <button 
+          <button
             onClick={() => setShowScanner(true)}
-            className="aspect-square rounded-xl border-2 border-dashed border-slate-300 hover:border-blue-400 bg-slate-50 flex flex-col items-center justify-center gap-2 transition-all group"
+            className="aspect-square rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-navy bg-slate-50 flex flex-col items-center justify-center gap-2 transition-all group"
           >
             <div className="bg-slate-200 p-3 rounded-full group-hover:bg-blue-100 transition-colors">
-              <svg className="w-6 h-6 text-slate-600 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-slate-600 group-hover:text-brand-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
@@ -219,17 +234,36 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
         />
 
         <div className="mt-8 space-y-3">
-          <button 
+          {/* Required consent + plain-language disclaimer */}
+          <label className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 ring-1 ring-slate-200 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              className="mt-0.5 w-5 h-5 shrink-0 accent-brand-navy cursor-pointer"
+            />
+            <span className="text-xs text-slate-600 leading-relaxed">
+              <span className="font-semibold text-slate-800">I understand this is a free AI estimate for general information only</span> —
+              not a quote, appraisal, or guarantee. Actual repair costs may be higher or lower, photos can't reveal hidden damage,
+              and I'll confirm any coverage or claim decision with my insurer.
+            </span>
+          </label>
+
+          <button
             onClick={handleConfirm}
-            disabled={previews.length === 0}
-            className={`w-full py-4 rounded-xl font-semibold text-white transition-all shadow-lg ${previews.length > 0 ? 'bg-blue-600 hover:bg-blue-700' : 'bg-slate-300 cursor-not-allowed'}`}
+            disabled={previews.length === 0 || !agreed}
+            className={`w-full py-4 rounded-xl font-bold text-white transition-all shadow-lg flex items-center justify-center gap-2 ${previews.length > 0 && agreed ? 'bg-brand-navy hover:bg-brand-navy-dk active:scale-[0.98]' : 'bg-slate-300 cursor-not-allowed'}`}
           >
             {buttonText}
+            {previews.length > 0 && agreed && <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>}
           </button>
+          {previews.length > 0 && !agreed && (
+            <p className="text-center text-xs text-brand-navy font-semibold">Please check the box above to continue.</p>
+          )}
           <p className="text-center text-xs text-slate-400">
-            {isDoc 
-              ? "We can read clear photos of paper estimates or PDF files, including iPhone HEIC images." 
-              : "Multiple angles help Gemini AI identify hidden damage and provide a more accurate guide, including iPhone HEIC photos."}
+            {isDoc
+              ? "We can read clear photos of paper estimates or PDF files, including iPhone HEIC images."
+              : "Multiple angles help our AI spot hidden damage and give a more accurate guide, including iPhone HEIC photos."}
           </p>
           {uploadError && (
             <p className="text-center text-sm text-red-600">{uploadError}</p>
@@ -249,5 +283,9 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
     </>
   );
 };
+
+const Dot: React.FC = () => (
+  <span className="w-1.5 h-1.5 rounded-full bg-brand-gold shrink-0 mt-[7px]" />
+);
 
 export default DamageUpload;

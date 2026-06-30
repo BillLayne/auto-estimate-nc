@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { EstimateResult } from '../types';
+import { AGENCY, LEGAL } from '../config';
 
 interface EstimateReportProps {
   report: EstimateResult;
@@ -9,71 +10,50 @@ interface EstimateReportProps {
 }
 
 const EstimateReport: React.FC<EstimateReportProps> = ({ report, reportImages, onReset }) => {
-  const downloadHtml = () => {
-    const reportHtml = document.getElementById('letterhead-report')?.innerHTML;
-    if (!reportHtml) return;
-
-    const fullHtml = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>Agency Guide - Bill Layne Insurance</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <style>
-          @media print { .no-print { display: none; } }
-          body { background: white; font-family: sans-serif; }
-        </style>
-      </head>
-      <body>
-        ${reportHtml}
-      </body>
-      </html>
-    `;
-
-    const blob = new Blob([fullHtml], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Bill-Layne-Agency-Guide-${report.customer?.lastName || 'Report'}.html`;
-    link.click();
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Visual Header */}
-      <div className="bg-white rounded-2xl shadow-sm border p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 no-print">
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200/70 p-6 sm:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 no-print">
         <div>
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-700 mb-2">
-            Preliminary Agency Guide
+          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-50 text-brand-navy mb-2">
+            Preliminary Estimate Guide
           </span>
-          <h2 className="text-4xl font-black text-slate-800 tracking-tight">
+          <h2 className="text-4xl sm:text-5xl font-extrabold text-brand-navy tracking-tight font-display">
             ${report.totalEstimate.toLocaleString()}
           </h2>
-          <p className="text-slate-500 font-medium">Prepared for {report.customer?.firstName} {report.customer?.lastName}</p>
+          <p className="text-slate-500 font-medium mt-1">Estimated repair cost for {report.customer?.firstName} {report.customer?.lastName}</p>
         </div>
-        <div className="flex flex-wrap gap-3">
-          <button 
+        <div className="flex flex-wrap gap-2.5 w-full md:w-auto">
+          <button
             onClick={() => window.print()}
-            className="px-6 py-2 rounded-lg border border-slate-300 font-semibold text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-2"
+            className="flex-1 md:flex-none px-5 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-            Export PDF
+            Save / Print
           </button>
-          <button 
-            onClick={downloadHtml}
-            className="px-6 py-2 rounded-lg border border-slate-300 font-semibold text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-            Save HTML
-          </button>
-          <button 
+          <button
             onClick={onReset}
-            className="px-6 py-2 rounded-lg bg-blue-600 font-bold text-white hover:bg-blue-700 transition-all shadow-md active:scale-95"
+            className="flex-1 md:flex-none px-5 py-2.5 rounded-xl bg-brand-navy font-bold text-white hover:bg-brand-navy-dk transition-all shadow-md active:scale-95"
           >
-            New Inquiry
+            New Estimate
           </button>
+        </div>
+      </div>
+
+      {/* Talk-to-Bill conversion CTA */}
+      <div className="bg-gradient-to-br from-brand-navy-deep via-brand-navy to-brand-navy-dk rounded-2xl shadow-lg p-6 sm:p-7 no-print flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
+        <div className="flex-grow">
+          <h3 className="text-white font-bold text-lg font-display">Questions about this estimate?</h3>
+          <p className="text-blue-100 text-sm mt-1">Bill can tell you whether it's worth filing a claim, and what it might do to your rate. No pressure — just a quick, honest answer.</p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-2.5 w-full sm:w-auto shrink-0">
+          <a href={AGENCY.phoneHref} className="px-5 py-3 rounded-xl bg-brand-gold text-brand-navy-deep font-bold text-sm hover:bg-brand-gold-lt transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.53 15.53 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.24 1.01l-2.2 2.22z"/></svg>
+            {AGENCY.phone}
+          </a>
+          <a href={AGENCY.emailHref} className="px-5 py-3 rounded-xl bg-white/10 text-white font-semibold text-sm hover:bg-white/20 transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
+            Email Bill
+          </a>
         </div>
       </div>
 
@@ -83,10 +63,10 @@ const EstimateReport: React.FC<EstimateReportProps> = ({ report, reportImages, o
           <div className="bg-orange-50 border-l-4 border-orange-400 p-6 rounded-r-xl">
             <h4 className="text-orange-800 font-bold text-sm uppercase flex items-center gap-2 mb-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-              Legal Notice & Disclaimer
+              Legal Notice &amp; Disclaimer
             </h4>
-            <p className="text-sm text-orange-900 leading-relaxed italic">
-              "I, Bill Layne, am an independent insurance agent, not a licensed professional auto damage appraiser or adjuster. This report is a preliminary guide generated using market trends and artificial intelligence. It is provided as a courtesy to help you understand potential costs before filing a claim. It is not an offer of insurance coverage, a promise to pay, or a final repair estimate. Actual costs may vary significantly."
+            <p className="text-xs text-orange-900 leading-relaxed">
+              {LEGAL.full}
             </p>
           </div>
 
@@ -283,9 +263,9 @@ const EstimateReport: React.FC<EstimateReportProps> = ({ report, reportImages, o
           </div>
         </div>
 
-        <div className="mt-12 p-6 bg-slate-50 rounded border-2 border-slate-200 text-xs leading-relaxed italic text-slate-600">
-          <p className="mb-2 font-bold text-slate-800 uppercase not-italic tracking-wider underline">Agency Disclaimer:</p>
-          "I, Bill Layne, am an independent insurance agent, not a licensed professional auto damage appraiser or adjuster. This document is a preliminary guide generated using market trends and AI vision technology. It is provided solely as a decision-support tool to help you understand potential repair costs before deciding to initiate an insurance claim. This is not a professional appraisal, a promise of coverage, or a binding repair quote. Bill Layne Insurance Agency assumes no liability for the accuracy of this data or actual repair costs incurred."
+        <div className="mt-12 p-6 bg-slate-50 rounded border-2 border-slate-200 text-xs leading-relaxed text-slate-600">
+          <p className="mb-2 font-bold text-slate-800 uppercase tracking-wider underline">Legal Notice &amp; Disclaimer:</p>
+          {LEGAL.full}
         </div>
 
         <div className="mt-12 border-t pt-8 text-center text-[10px] text-slate-400 uppercase tracking-widest font-bold">
