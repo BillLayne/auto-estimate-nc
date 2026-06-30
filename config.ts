@@ -17,9 +17,10 @@ export const IMAGES = {
    * image — no cut-out needed; the navy blends into the hero. '' = gradient only.
    */
   heroScene: asset('hero-scene.webp'),
-  /** Mobile-balanced crop of the scene (left dark margin trimmed so the car/card
-   * sit centered in the stacked mobile hero band). */
-  heroSceneMobile: asset('hero-scene-mobile.webp'),
+  /** Purpose-built 3:2 mobile hero (Bill's render i.imgur.com/LDkHokN.png):
+   * centered white car + phone + $1,248 card on navy, designed for the stacked
+   * mobile band (no cropping needed). */
+  heroSceneMobile: asset('hero-mobile.webp'),
   /** Legacy transparent foreground (kept for the old layout / fallback). */
   heroForeground: asset('hero-foreground.webp'),
 };
