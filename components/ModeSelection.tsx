@@ -7,44 +7,6 @@ interface ModeSelectionProps {
   setStep: (step: AppStep) => void;
 }
 
-/* ── Fallback hero graphic (used until Bill's transparent PNG is added) ── */
-const HeroArtFallback: React.FC = () => (
-  <svg viewBox="0 0 320 280" className="w-full h-full drop-shadow-2xl" role="img" aria-label="Phone scanning car damage to produce a repair estimate">
-    <defs>
-      <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#ffffff"/><stop offset="100%" stopColor="#eef2f8"/>
-      </linearGradient>
-      <linearGradient id="phone" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#012a5e"/><stop offset="100%" stopColor="#003f87"/>
-      </linearGradient>
-    </defs>
-    {/* car silhouette */}
-    <g opacity="0.95">
-      <path d="M40 168c0-10 14-30 30-34 18-4 70-6 92 0 14 4 30 16 46 20 16 4 22 10 22 22v10a6 6 0 01-6 6H46a6 6 0 01-6-6z" fill="#C8A84E"/>
-      <path d="M78 134c10-2 56-3 78 0 8 1 16 8 22 16H66c4-7 6-14 12-16z" fill="#E0C878"/>
-      <circle cx="86" cy="192" r="16" fill="#001a3d"/><circle cx="86" cy="192" r="7" fill="#5b7aa6"/>
-      <circle cx="198" cy="192" r="16" fill="#001a3d"/><circle cx="198" cy="192" r="7" fill="#5b7aa6"/>
-      {/* dent / damage marks */}
-      <path d="M150 150l8 8m0-8l-8 8" stroke="#dc2626" strokeWidth="4" strokeLinecap="round"/>
-    </g>
-    {/* phone */}
-    <g transform="rotate(-8 230 120)">
-      <rect x="196" y="44" width="74" height="150" rx="14" fill="url(#phone)" stroke="#C8A84E" strokeWidth="2"/>
-      <rect x="206" y="60" width="54" height="92" rx="6" fill="#0b1f3f"/>
-      <rect x="214" y="70" width="38" height="26" rx="3" fill="#C8A84E" opacity="0.85"/>
-      <path d="M222 84l5 5 9-10" stroke="#001a3d" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-    </g>
-    {/* floating estimate card */}
-    <g className="animate-floaty">
-      <rect x="20" y="36" width="150" height="70" rx="14" fill="url(#card)" stroke="#C8A84E" strokeWidth="2"/>
-      <circle cx="46" cy="62" r="12" fill="#16a34a"/>
-      <path d="M40 62l5 5 8-9" stroke="#fff" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-      <text x="66" y="58" fontFamily="Plus Jakarta Sans, sans-serif" fontSize="11" fontWeight="700" fill="#012a5e">Estimate Ready</text>
-      <text x="66" y="80" fontFamily="Plus Jakarta Sans, sans-serif" fontSize="20" fontWeight="800" fill="#003f87">$2,450</text>
-    </g>
-  </svg>
-);
-
 interface ToolCard {
   step: AppStep;
   num: string;
@@ -88,32 +50,37 @@ const ModeSelection: React.FC<ModeSelectionProps> = ({ setStep }) => {
     },
   ];
 
-  const heroBgStyle = IMAGES.heroBackground
-    ? { backgroundImage: `url("${IMAGES.heroBackground}")`, backgroundSize: 'cover', backgroundPosition: 'center' }
-    : undefined;
-
   return (
     <div className="animate-fadeIn">
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden rounded-3xl shadow-xl mb-8">
-        {/* background image layer */}
-        <div className="absolute inset-0 bg-brand-navy" style={heroBgStyle} />
-        {/* navy gradient overlay keeps text readable over any photo */}
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-navy-deep/95 via-brand-navy/85 to-brand-navy-dk/80" />
+      <section className="relative overflow-hidden rounded-3xl shadow-card-lg mb-8 bg-brand-navy-deep md:min-h-[500px] md:flex md:items-center">
+        {/* MOBILE: scene as an image band on top (stacked, no text overlap) */}
+        <div
+          className="md:hidden h-64 bg-cover bg-no-repeat bg-[position:58%_20%]"
+          style={{ backgroundImage: `url("${IMAGES.heroScene}")` }}
+          role="img"
+          aria-label="A phone photographing a dented car, with an instant repair estimate of $1,248"
+        />
+        {/* DESKTOP: scene as a full-bleed background */}
+        <div
+          className="hidden md:block absolute inset-0 bg-no-repeat bg-cover bg-[position:right_22%]"
+          style={{ backgroundImage: `url("${IMAGES.heroScene}")` }}
+        />
+        {/* DESKTOP: left-to-right navy gradient keeps the headline readable over the photo */}
+        <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-brand-navy-deep via-brand-navy-deep/45 to-transparent" />
         {/* gold glow accent */}
-        <div className="absolute -top-16 -right-16 w-72 h-72 rounded-full bg-brand-gold/20 blur-3xl" />
+        <div className="absolute -top-12 -right-10 w-72 h-72 rounded-full bg-brand-gold/15 blur-3xl pointer-events-none" />
 
-        <div className="relative grid md:grid-cols-2 gap-6 items-center p-6 sm:p-10">
-          {/* copy */}
-          <div className="text-center md:text-left">
+        <div className="relative z-10 w-full p-6 sm:p-9 md:p-10">
+          <div className="max-w-md text-center md:text-left mx-auto md:mx-0">
             <span className="inline-flex items-center gap-2 bg-brand-gold/20 border border-brand-gold/40 text-brand-gold-lt text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-gold animate-pulse" /> Free AI Tool · No login
             </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-white leading-[1.1] font-display">
+            <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-white leading-[1.1] font-display drop-shadow-[0_2px_14px_rgba(0,0,0,0.55)]">
               Wrecked or dinged?<br className="hidden sm:block" />
               <span className="text-brand-gold-lt">Know the cost</span> before you call.
             </h2>
-            <p className="text-blue-100 mt-4 text-base sm:text-lg max-w-md mx-auto md:mx-0">
+            <p className="text-blue-50 mt-4 text-base sm:text-lg max-w-md mx-auto md:mx-0 drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
               Snap a few photos and get a friendly, preliminary repair estimate — so you can decide whether it's worth filing a claim.
             </p>
             <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
@@ -126,19 +93,10 @@ const ModeSelection: React.FC<ModeSelectionProps> = ({ setStep }) => {
               </button>
             </div>
             {/* trust chips */}
-            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 justify-center md:justify-start text-xs text-blue-200">
+            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 justify-center md:justify-start text-xs text-blue-100 drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
               <span className="flex items-center gap-1.5"><Check /> Takes ~2 minutes</span>
               <span className="flex items-center gap-1.5"><Check /> NC market pricing</span>
               <span className="flex items-center gap-1.5"><Check /> 100% private</span>
-            </div>
-          </div>
-
-          {/* hero art */}
-          <div className="order-first md:order-last">
-            <div className="w-56 sm:w-72 md:w-full max-w-sm mx-auto">
-              {IMAGES.heroForeground
-                ? <img src={IMAGES.heroForeground} alt="Get an instant auto repair estimate" className="w-full h-auto drop-shadow-2xl animate-floaty" />
-                : <HeroArtFallback />}
             </div>
           </div>
         </div>

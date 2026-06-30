@@ -10,14 +10,14 @@
 const asset = (file: string) => `${import.meta.env.BASE_URL}${file}`;
 
 export const IMAGES = {
-  /** Wide banner behind the hero headline (1920×1080 JPG). '' = on-brand gradient only. */
-  heroBackground: '',
   /**
-   * Transparent graphic shown inside the hero, next to the headline.
-   * Cleaned from Bill's render (i.imgur.com/TORSrKe.png) — the original was an
-   * opaque RGB with a baked-in checkerboard; background knocked out to true
-   * transparency and shipped as an optimized 126KB WebP in /public.
+   * Full-bleed hero scene (Bill's render i.imgur.com/lKjehnp.png): pearl-white car
+   * + phone + glowing $1,248 card on a SOLID deep-navy background with dark
+   * negative space on the left for the headline. Used as the hero's background
+   * image — no cut-out needed; the navy blends into the hero. '' = gradient only.
    */
+  heroScene: asset('hero-scene.webp'),
+  /** Legacy transparent foreground (kept for the old layout / fallback). */
   heroForeground: asset('hero-foreground.webp'),
 };
 
