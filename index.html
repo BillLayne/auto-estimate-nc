@@ -59,6 +59,31 @@
             "addressCountry": "US"
           },
           "areaServed": { "@type": "State", "name": "North Carolina" }
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is this an official insurance estimate?",
+              "acceptedAnswer": { "@type": "Answer", "text": "No — it's a free, preliminary guide to help you understand likely costs before you file a claim. Your final repair cost is set by a licensed body shop and your insurance adjuster." }
+            },
+            {
+              "@type": "Question",
+              "name": "Will using this raise my rates or start a claim?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Not at all. Nothing here files a claim or contacts your insurance company. It's just information for you." }
+            },
+            {
+              "@type": "Question",
+              "name": "Do I need an account?",
+              "acceptedAnswer": { "@type": "Answer", "text": "No — there's no login and no sign-up. It's free to use as many times as you like." }
+            },
+            {
+              "@type": "Question",
+              "name": "What if I already have a body-shop estimate?",
+              "acceptedAnswer": { "@type": "Answer", "text": "Use the Explain My Estimate tool to translate the jargon into plain English, or Compare Two Estimates to see why two shops priced it differently." }
+            }
+          ]
         }
       ]
     }
@@ -134,7 +159,43 @@
     </style>
 </head>
 <body class="text-slate-900 antialiased">
-    <div id="root"></div>
+    <div id="root"><!-- Prerendered SEO/content fallback. React (createRoot) replaces this with the interactive app on load; crawlers and no-JS visitors read the real content below. -->
+      <main style="max-width:760px;margin:0 auto;padding:40px 22px;font-family:system-ui,'Segoe UI',Arial,sans-serif;color:#0f172a;line-height:1.6">
+        <p style="color:#9a7d2f;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px;margin:0">Free AI Tool · No login</p>
+        <h1 style="font-size:30px;font-weight:800;color:#003f87;margin:6px 0 12px">Free AI Auto Body Repair Estimate in North Carolina</h1>
+        <p style="font-size:17px">Wrecked or dinged? Snap a few photos of your vehicle damage and get a friendly, preliminary auto body repair estimate in about a minute — so you can decide whether it's worth filing a claim. A free tool from <strong>Bill Layne Insurance Agency</strong> in Elkin, NC.</p>
+
+        <h2 style="font-size:21px;color:#003f87;margin-top:26px">What you can do</h2>
+        <ul>
+          <li><strong>Get a Repair Estimate</strong> — snap photos of the damage and get a preliminary repair-cost guide based on current North Carolina parts and labor rates.</li>
+          <li><strong>Explain My Estimate</strong> — already have a body-shop estimate? We translate the confusing jargon into plain English.</li>
+          <li><strong>Compare Two Estimates</strong> — got quotes from two shops? See exactly why the prices differ, side by side.</li>
+        </ul>
+
+        <h2 style="font-size:21px;color:#003f87;margin-top:26px">How it works</h2>
+        <ol>
+          <li>Tell us a little about your car — year, make, model and mileage.</li>
+          <li>Snap a few photos of the damage — a wide shot, a close-up and a different angle.</li>
+          <li>Get your preliminary estimate using current NC market pricing.</li>
+        </ol>
+
+        <h2 style="font-size:21px;color:#003f87;margin-top:26px">Common questions</h2>
+        <h3 style="font-size:16px;margin-bottom:2px">Is this an official insurance estimate?</h3>
+        <p style="margin-top:0">No — it's a free, preliminary guide to help you understand likely costs before you file a claim. Your final repair cost is set by a licensed body shop and your insurance adjuster.</p>
+        <h3 style="font-size:16px;margin-bottom:2px">Will using this raise my rates or start a claim?</h3>
+        <p style="margin-top:0">Not at all. Nothing here files a claim or contacts your insurance company.</p>
+        <h3 style="font-size:16px;margin-bottom:2px">Do I need an account?</h3>
+        <p style="margin-top:0">No — no login, no sign-up, free to use.</p>
+
+        <h2 style="font-size:21px;color:#003f87;margin-top:26px">Bill Layne Insurance Agency</h2>
+        <p>1283 N Bridge St, Elkin, NC 28621<br>
+        Phone: <a href="tel:+13368351993" style="color:#003f87">(336) 835-1993</a><br>
+        Email: <a href="mailto:Save@BillLayneInsurance.com" style="color:#003f87">Save@BillLayneInsurance.com</a><br>
+        Serving all 100 North Carolina counties since 2005.</p>
+
+        <p style="font-size:12px;color:#64748b;margin-top:22px">Estimates are a preliminary AI guide based on photos and NC market averages — not a professional appraisal. Loading the interactive tool…</p>
+      </main>
+    </div>
     <script type="module" src="/index.tsx"></script>
 </body>
 </html>
