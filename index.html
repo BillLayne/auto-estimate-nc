@@ -34,7 +34,26 @@
             animation: {
               fadeIn: 'fadeIn 0.5s ease-out both',
               floaty: 'floaty 6s ease-in-out infinite',
-            }
+            },
+            // Softer, layered "floaty" shadows borrowed from sendbilldocs —
+            // overrides the default sm/md/lg/xl so all existing cards upgrade automatically.
+            boxShadow: {
+              sm: '0 2px 10px rgba(13,35,73,0.06)',
+              DEFAULT: '0 12px 35px rgba(13,35,73,0.08)',
+              md: '0 12px 35px rgba(13,35,73,0.08)',
+              lg: '0 18px 50px rgba(10,31,66,0.12)',
+              xl: '0 22px 70px rgba(10,31,66,0.16)',
+              'glow-gold': '0 12px 28px rgba(200,168,78,0.40)',
+              'glow-navy': '0 14px 34px rgba(0,63,135,0.28)',
+            },
+            backgroundImage: {
+              'gold-grad': 'linear-gradient(180deg, #E0C878, #C8A84E)',
+              'gold-grad-hover': 'linear-gradient(180deg, #EBD89A, #D4B65E)',
+            },
+            // Gentle radius bump (16px → 20px) for softer, friendlier cards.
+            borderRadius: {
+              '2xl': '1.25rem',
+            },
           }
         }
       }

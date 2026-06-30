@@ -45,7 +45,7 @@ const Layout: React.FC<LayoutProps> = ({ children, setStep }) => {
               </div>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-2.5">
-              <a href={AGENCY.phoneHref} className="px-4 py-2.5 rounded-xl bg-brand-gold text-brand-navy-deep font-bold text-sm hover:bg-brand-gold-lt transition-colors">
+              <a href={AGENCY.phoneHref} className="px-4 py-2.5 rounded-xl bg-gold-grad text-brand-navy-deep font-bold text-sm hover:bg-gold-grad-hover transition-all shadow-glow-gold">
                 {AGENCY.phone}
               </a>
               <a href={AGENCY.emailHref} className="px-4 py-2.5 rounded-xl bg-white/10 text-white font-semibold text-sm hover:bg-white/20 transition-colors">

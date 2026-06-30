@@ -119,7 +119,7 @@ const ModeSelection: React.FC<ModeSelectionProps> = ({ setStep }) => {
             <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
               <button
                 onClick={() => setStep(AppStep.Intake)}
-                className="px-6 py-4 rounded-2xl bg-brand-gold text-brand-navy-deep font-bold text-base hover:bg-brand-gold-lt active:scale-[0.98] transition-all shadow-lg shadow-black/20 flex items-center justify-center gap-2"
+                className="px-6 py-4 rounded-2xl bg-gold-grad text-brand-navy-deep font-bold text-base hover:bg-gold-grad-hover active:scale-[0.98] transition-all shadow-glow-gold flex items-center justify-center gap-2"
               >
                 Start My Free Estimate
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>

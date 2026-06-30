@@ -47,7 +47,7 @@ const EstimateReport: React.FC<EstimateReportProps> = ({ report, reportImages, o
           <p className="text-blue-100 text-sm mt-1">Bill can tell you whether it's worth filing a claim, and what it might do to your rate. No pressure — just a quick, honest answer.</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2.5 w-full sm:w-auto shrink-0">
-          <a href={AGENCY.phoneHref} className="px-5 py-3 rounded-xl bg-brand-gold text-brand-navy-deep font-bold text-sm hover:bg-brand-gold-lt transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
+          <a href={AGENCY.phoneHref} className="px-5 py-3 rounded-xl bg-gold-grad text-brand-navy-deep font-bold text-sm hover:bg-gold-grad-hover transition-all shadow-glow-gold flex items-center justify-center gap-2 whitespace-nowrap">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.53 15.53 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.24 1.01l-2.2 2.22z"/></svg>
             {AGENCY.phone}
           </a>

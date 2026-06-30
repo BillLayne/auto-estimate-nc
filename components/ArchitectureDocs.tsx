@@ -93,7 +93,7 @@ const ArchitectureDocs: React.FC = () => {
         <h3 className="text-white font-bold text-lg font-display">Rather just talk to a person?</h3>
         <p className="text-blue-100 text-sm mt-1 mb-4">Bill Layne Insurance has served all 100 NC counties since 2005. Call or email any time.</p>
         <div className="flex flex-col sm:flex-row gap-2.5 justify-center">
-          <a href={AGENCY.phoneHref} className="px-6 py-3 rounded-xl bg-brand-gold text-brand-navy-deep font-bold text-sm hover:bg-brand-gold-lt transition-colors">
+          <a href={AGENCY.phoneHref} className="px-6 py-3 rounded-xl bg-gold-grad text-brand-navy-deep font-bold text-sm hover:bg-gold-grad-hover transition-all shadow-glow-gold">
             Call {AGENCY.phone}
           </a>
           <a href={AGENCY.emailHref} className="px-6 py-3 rounded-xl bg-white/10 text-white font-semibold text-sm hover:bg-white/20 transition-colors">
