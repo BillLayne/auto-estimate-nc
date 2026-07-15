@@ -30,12 +30,12 @@ export const IMAGES = {
    * Desktop = 16:9 full-bleed bg with dark-left negative space for the headline.
    * Mobile = purpose-built 3:2 centered scene shown uncropped as a top band.
    */
-  homeHero: '',
-  homeHeroMobile: '',
+  homeHero: asset('hero-home.webp'),
+  homeHeroMobile: asset('hero-home-mobile.webp'),
   /** "Why homeowners use this" card photos (16:10). '' = icon-only cards. */
-  homeWhyClaim: '',
-  homeWhyBudget: '',
-  homeWhyWaiting: '',
+  homeWhyClaim: asset('home-why-claim.webp'),
+  homeWhyBudget: asset('home-why-budget.webp'),
+  homeWhyWaiting: asset('home-why-waiting.webp'),
 };
 
 /** Agency contact details — single source of truth for header/footer. */

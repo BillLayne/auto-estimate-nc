@@ -16,26 +16,27 @@ const HomeLanding: React.FC<HomeLandingProps> = ({ onStart }) => {
     <div className="animate-fadeIn">
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative overflow-hidden rounded-3xl shadow-lg mb-8 bg-brand-navy-deep md:min-h-[480px] md:flex md:items-center">
+        {/* Base gradient — must come FIRST so the absolute layer stays behind the mobile band */}
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-navy-deep via-brand-navy to-brand-navy-dk" />
         {/* MOBILE: purpose-built 3:2 scene as a top band (full image, no crop) */}
         {IMAGES.homeHeroMobile && (
           <div
-            className="md:hidden aspect-[3/2] bg-cover bg-no-repeat bg-center"
+            className="relative md:hidden aspect-[3/2] bg-cover bg-no-repeat bg-center"
             style={{ backgroundImage: `url("${IMAGES.homeHeroMobile}")` }}
             role="img"
             aria-label="A phone photographing a home, with an instant repair-cost estimate card"
           />
         )}
-        {/* DESKTOP: optional full-bleed render (IMAGES.homeHero) — falls back to the on-brand gradient */}
-        {IMAGES.homeHero ? (
-          <div
-            className="hidden md:block absolute inset-0 bg-no-repeat bg-cover bg-[position:right_30%]"
-            style={{ backgroundImage: `url("${IMAGES.homeHero}")` }}
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-navy-deep via-brand-navy to-brand-navy-dk" />
-        )}
+        {/* DESKTOP (lg+): full-bleed render — at md the in-photo cost card would sit
+            behind the text, so tablets get the clean gradient instead. */}
         {IMAGES.homeHero && (
-          <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-brand-navy-deep via-brand-navy-deep/45 to-transparent" />
+          <>
+            <div
+              className="hidden lg:block absolute inset-0 bg-no-repeat bg-cover bg-[position:right_30%]"
+              style={{ backgroundImage: `url("${IMAGES.homeHero}")` }}
+            />
+            <div className="hidden lg:block absolute inset-0 bg-gradient-to-r from-brand-navy-deep via-brand-navy-deep/45 to-transparent" />
+          </>
         )}
         {/* gold glow accents */}
         <div className="absolute -top-12 -right-10 w-72 h-72 rounded-full bg-brand-gold/15 blur-3xl pointer-events-none" />
