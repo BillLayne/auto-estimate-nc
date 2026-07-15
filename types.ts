@@ -79,6 +79,52 @@ export interface ComparisonResult {
   recommendation: string;
 }
 
+// ─── Home Estimate (autoestimatenc.com/home/) ─────────────────
+
+export type HomeProjectMode = 'damage' | 'upgrade';
+
+export interface HomeProjectInfo {
+  mode: HomeProjectMode;
+  category: string;
+  description: string;
+  /** Optional free text: "12x16 deck", "about 1,800 sq ft roof" */
+  approxSize: string;
+  /** Optional NC ZIP for regional pricing flavor */
+  zip: string;
+  /** Optional deductible (damage mode only) — compared client-side, never sent to the AI */
+  deductible: string;
+}
+
+export interface HomeLineItem {
+  description: string;
+  category: 'Materials' | 'Labor' | 'Other';
+  lowCost: number;
+  highCost: number;
+  note?: string;
+}
+
+export interface HomeRepairVsReplace {
+  repairLow: number;
+  repairHigh: number;
+  replaceLow: number;
+  replaceHigh: number;
+  guidance: string;
+}
+
+export interface HomeEstimateResult {
+  projectTitle: string;
+  scopeSummary: string;
+  severity?: 'Minor' | 'Moderate' | 'Severe';
+  observedIssues: string[];
+  lineItems: HomeLineItem[];
+  totalLow: number;
+  totalHigh: number;
+  repairVsReplace?: HomeRepairVsReplace | null;
+  claimConsiderations?: string;
+  budgetTips: string[];
+  groundingSources: Array<{title: string, uri: string}>;
+}
+
 export enum AppStep {
   ModeSelection = 'mode_selection',
   Intake = 'intake',
@@ -86,7 +132,7 @@ export enum AppStep {
   Processing = 'processing',
   Report = 'report',
   Docs = 'docs',
-  
+
   // Existing Flow Steps
   UploadEstimate = 'upload_estimate',
   ProcessingSimplification = 'processing_simplification',
@@ -96,5 +142,12 @@ export enum AppStep {
   UploadComparisonA = 'upload_comparison_a',
   UploadComparisonB = 'upload_comparison_b',
   ProcessingComparison = 'processing_comparison',
-  ComparisonReport = 'comparison_report'
+  ComparisonReport = 'comparison_report',
+
+  // Home Estimate Flow (/home/ landing page)
+  HomeLanding = 'home_landing',
+  HomeIntake = 'home_intake',
+  HomeAnalysis = 'home_analysis',
+  ProcessingHome = 'processing_home',
+  HomeReport = 'home_report'
 }

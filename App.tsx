@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AppStep, VehicleInfo, CustomerInfo, EstimateResult, SimplifiedEstimateResult, ComparisonResult } from './types';
+import { AppStep, VehicleInfo, CustomerInfo, EstimateResult, SimplifiedEstimateResult, ComparisonResult, HomeProjectInfo, HomeProjectMode, HomeEstimateResult } from './types';
 import Layout from './components/Layout';
 import ModeSelection from './components/ModeSelection';
 import VehicleForm from './components/VehicleForm';
@@ -9,10 +9,28 @@ import EstimateReport from './components/EstimateReport';
 import SimplifiedReport from './components/SimplifiedReport';
 import ComparisonReport from './components/ComparisonReport';
 import ArchitectureDocs from './components/ArchitectureDocs';
-import { generateEstimate, analyzeExistingEstimate, compareEstimates } from './services/geminiService';
+import HomeLanding from './components/HomeLanding';
+import HomeProjectForm from './components/HomeProjectForm';
+import HomeEstimateReport from './components/HomeEstimateReport';
+import { generateEstimate, analyzeExistingEstimate, compareEstimates, generateHomeEstimate } from './services/geminiService';
+import { LEGAL } from './config';
 
-const App: React.FC = () => {
-  const [step, setStep] = useState<AppStep>(AppStep.ModeSelection);
+interface AppProps {
+  /** 'auto' = / (car tools) · 'home' = /home/ (home repair & project estimates) */
+  variant?: 'auto' | 'home';
+}
+
+const EMPTY_HOME_PROJECT: HomeProjectInfo = {
+  mode: 'damage',
+  category: '',
+  description: '',
+  approxSize: '',
+  zip: '',
+  deductible: ''
+};
+
+const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
+  const [step, setStep] = useState<AppStep>(variant === 'home' ? AppStep.HomeLanding : AppStep.ModeSelection);
   
   // State for Flow A (New Estimate)
   const [vehicle, setVehicle] = useState<VehicleInfo>({
@@ -37,7 +55,11 @@ const App: React.FC = () => {
   // State for Flow C (Comparison)
   const [comparisonFilesA, setComparisonFilesA] = useState<string[]>([]);
   const [comparisonResult, setComparisonResult] = useState<ComparisonResult | null>(null);
-  
+
+  // State for Flow D (Home Estimate — /home/)
+  const [homeProject, setHomeProject] = useState<HomeProjectInfo>(EMPTY_HOME_PROJECT);
+  const [homeReport, setHomeReport] = useState<HomeEstimateResult | null>(null);
+
   const [loadingMsg, setLoadingMsg] = useState('Processing...');
 
   // Flow A Handler
@@ -110,6 +132,32 @@ const App: React.FC = () => {
     }
   };
 
+  // Flow D Handlers (Home Estimate)
+  const handleHomeStart = (mode: HomeProjectMode) => {
+    setHomeProject({ ...EMPTY_HOME_PROJECT, mode });
+    setStep(AppStep.HomeIntake);
+  };
+
+  const handleHomeAnalysis = async (imagesData: string[]) => {
+    setCapturedImages(imagesData);
+    setStep(AppStep.ProcessingHome);
+    setLoadingMsg('Reviewing Your Photos...');
+
+    try {
+      setTimeout(() => setLoadingMsg('Checking NC Material Prices...'), 2000);
+      setTimeout(() => setLoadingMsg('Estimating Labor Hours...'), 4000);
+      setTimeout(() => setLoadingMsg('Finalizing Your Cost Guide...'), 6000);
+
+      const result = await generateHomeEstimate(homeProject, imagesData);
+      setHomeReport(result);
+      setStep(AppStep.HomeReport);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to generate the cost guide. Please check your network and try again.");
+      setStep(AppStep.HomeAnalysis);
+    }
+  };
+
   const handleReset = () => {
     setVehicle({ vin: '', year: '', make: '', model: '', mileage: '' });
     setCustomer({ firstName: '', lastName: '', address: '', email: '' });
@@ -118,15 +166,65 @@ const App: React.FC = () => {
     setComparisonResult(null);
     setCapturedImages([]);
     setComparisonFilesA([]);
-    setStep(AppStep.ModeSelection);
+    setHomeProject(EMPTY_HOME_PROJECT);
+    setHomeReport(null);
+    setStep(variant === 'home' ? AppStep.HomeLanding : AppStep.ModeSelection);
   };
 
   return (
-    <Layout activeStep={step} setStep={setStep}>
-      
+    <Layout activeStep={step} setStep={setStep} variant={variant}>
+
       {/* MODE SELECTION SCREEN */}
       {step === AppStep.ModeSelection && (
         <ModeSelection setStep={setStep} />
+      )}
+
+      {/* FLOW D: HOME ESTIMATE (/home/) */}
+      {step === AppStep.HomeLanding && (
+        <HomeLanding onStart={handleHomeStart} />
+      )}
+
+      {step === AppStep.HomeIntake && (
+        <HomeProjectForm
+          project={homeProject}
+          onChange={setHomeProject}
+          onNext={() => setStep(AppStep.HomeAnalysis)}
+          onBack={() => setStep(AppStep.HomeLanding)}
+        />
+      )}
+
+      {step === AppStep.HomeAnalysis && (
+        <DamageUpload
+          mode="damage"
+          customTitle={homeProject.mode === 'damage' ? 'Photos of the Damage' : 'Photos of the Project Area'}
+          customSubtitle="Add multiple clear photos from different angles — iPhone photos work great."
+          customButtonText="Get My Cost Guide"
+          customTips={homeProject.mode === 'damage'
+            ? ['A **wide shot** of the whole damaged area', 'A **close-up** of the worst spot', 'A **step-back shot** showing the surroundings']
+            : ['A **wide shot** of the area as it looks today', 'A **close-up** of anything worn or being replaced', 'A **second angle** so we can judge the size']}
+          consentText={LEGAL.homeConsent}
+          onImagesCaptured={handleHomeAnalysis}
+          onBack={() => setStep(AppStep.HomeIntake)}
+        />
+      )}
+
+      {step === AppStep.ProcessingHome && (
+        <div className="flex flex-col items-center justify-center min-h-[50vh]">
+          <div className="w-20 h-20 border-4 border-brand-navy border-t-brand-gold rounded-full animate-spin mb-6"></div>
+          <h2 className="text-2xl font-bold text-slate-800 font-display text-center px-4">{loadingMsg}</h2>
+          <p className="text-slate-500 mt-2 text-center max-w-sm px-4">
+            Building your preliminary cost range from current NC material prices and contractor labor rates.
+          </p>
+        </div>
+      )}
+
+      {step === AppStep.HomeReport && homeReport && (
+        <HomeEstimateReport
+          report={homeReport}
+          project={homeProject}
+          reportImages={capturedImages}
+          onReset={handleReset}
+        />
       )}
 
       {/* FLOW A: NEW ESTIMATE */}

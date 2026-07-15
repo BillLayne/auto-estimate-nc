@@ -108,7 +108,7 @@ const ModeSelection: React.FC<ModeSelectionProps> = ({ setStep }) => {
         <p className="text-slate-500 text-sm mt-1">Pick the option that fits your situation.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
         {cards.map((c) => (
           <button
             key={c.step}
@@ -127,6 +127,24 @@ const ModeSelection: React.FC<ModeSelectionProps> = ({ setStep }) => {
             </span>
           </button>
         ))}
+
+        {/* NEW: Home repair & project estimates — separate landing page at /home/ */}
+        <a
+          href="/home/"
+          className="group relative text-left bg-white p-6 rounded-2xl shadow-sm ring-1 ring-slate-200/70 hover:ring-brand-gold hover:shadow-xl active:scale-[0.99] transition-all flex flex-col"
+        >
+          <span className="absolute top-5 right-5 text-5xl font-extrabold text-slate-100 group-hover:text-brand-gold/25 transition-colors font-display leading-none select-none">4</span>
+          <span className="absolute top-4 left-4 bg-brand-gold/15 border border-brand-gold/40 text-[9px] font-bold uppercase tracking-wider text-brand-navy px-2 py-0.5 rounded-full">New</span>
+          <div className="w-14 h-14 rounded-2xl bg-brand-navy text-white flex items-center justify-center mb-4 mt-3 group-hover:bg-brand-gold group-hover:text-brand-navy-deep transition-colors shadow-md">
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+          </div>
+          <h4 className="text-lg font-bold text-slate-800 mb-1.5 font-display">Home Repair &amp; Project Estimates</h4>
+          <p className="text-sm text-slate-500 mb-4 flex-grow">Storm damage or planning an upgrade? Photo your roof, deck, or siding for an instant NC cost guide.</p>
+          <span className="text-brand-navy font-bold text-sm flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
+            Estimate my home project
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+          </span>
+        </a>
       </div>
 
       {/* ── reassurance strip ───────────────────────────── */}

@@ -13,5 +13,14 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, '.'),
     }
-  }
+  },
+  build: {
+    rollupOptions: {
+      // Multi-page: / (auto tools) + /home/ (home repair & project estimates)
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        home: path.resolve(__dirname, 'home/index.html'),
+      },
+    },
+  },
 });

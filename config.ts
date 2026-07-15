@@ -23,6 +23,12 @@ export const IMAGES = {
   heroSceneMobile: asset('hero-mobile.webp'),
   /** Legacy transparent foreground (kept for the old layout / fallback). */
   heroForeground: asset('hero-foreground.webp'),
+  /**
+   * /home/ landing hero scene — waiting on Bill's render (same trick as the car:
+   * generate on SOLID deep navy #001a3d, e.g. a house + phone + glowing repair-cost
+   * card). '' = on-brand navy/gold gradient fallback, nothing looks broken.
+   */
+  homeHero: '',
 };
 
 /** Agency contact details — single source of truth for header/footer. */
@@ -57,6 +63,13 @@ export const LEGAL = {
     'I understand this is AI-generated information for general guidance only — not a quote, appraisal, ' +
     'guarantee, or professional advice — and that the results may be incomplete or inaccurate.',
 
+  /** Home-flow consent line (upload screen checkbox on /home/). */
+  homeConsent:
+    'I understand this is a free AI cost guide for general information only — not a contractor bid, ' +
+    'appraisal, or guarantee. Actual costs may be higher or lower, photos can’t reveal hidden damage ' +
+    'behind walls or under surfaces, and I’ll get written estimates from licensed contractors and confirm ' +
+    'any coverage or claim decision with my insurer.',
+
   /** Full disclaimer shown on every result/report. */
   full:
     'IMPORTANT — PLEASE READ. This tool provides an automated, AI-generated estimate for general ' +
@@ -65,8 +78,8 @@ export const LEGAL = {
     'legal, financial, or professional advice. Estimates are produced by artificial intelligence from the ' +
     'photos and details you provide; they may be incomplete or inaccurate, and your actual repair cost may ' +
     'be significantly higher or lower. Photos cannot reveal hidden or structural damage. Always obtain a ' +
-    'written estimate from a licensed repair facility and confirm any coverage, deductible, or claim ' +
-    'decision directly with your insurance company. Using this tool does not file a claim, create an ' +
+    'written estimate from a licensed repair facility or licensed contractor and confirm any coverage, ' +
+    'deductible, or claim decision directly with your insurance company. Using this tool does not file a claim, create an ' +
     'insurance policy, or create an agent, professional, or fiduciary relationship. This tool is provided ' +
     '"AS IS" and "AS AVAILABLE," without warranties of any kind, express or implied. To the fullest extent ' +
     'permitted by law, Bill Layne Insurance Agency and its owners, agents, and employees disclaim all ' +

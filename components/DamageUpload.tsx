@@ -12,15 +12,21 @@ interface DamageUploadProps {
   customTitle?: string;
   customSubtitle?: string;
   customButtonText?: string;
+  /** Override the photo-tip bullets (each entry supports "**bold**" markers). */
+  customTips?: string[];
+  /** Override the consent checkbox copy (home flow uses contractor wording). */
+  consentText?: React.ReactNode;
 }
 
-const DamageUpload: React.FC<DamageUploadProps> = ({ 
-  onImagesCaptured, 
+const DamageUpload: React.FC<DamageUploadProps> = ({
+  onImagesCaptured,
   onBack,
   mode = 'damage',
   customTitle,
   customSubtitle,
-  customButtonText
+  customButtonText,
+  customTips,
+  consentText
 }) => {
   const [previews, setPreviews] = useState<string[]>([]);
   const [showScanner, setShowScanner] = useState(false);
@@ -166,9 +172,16 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
           <div className="mb-5 rounded-xl bg-blue-50/70 ring-1 ring-blue-100 p-4">
             <p className="text-xs font-bold text-brand-navy uppercase tracking-wide mb-2">📸 For the best estimate, add:</p>
             <ul className="text-sm text-slate-600 space-y-1.5">
-              <li className="flex items-start gap-2.5"><Dot/><span>A <b className="font-semibold text-slate-700">wide shot</b> of the whole damaged area</span></li>
-              <li className="flex items-start gap-2.5"><Dot/><span>A <b className="font-semibold text-slate-700">close-up</b> of the worst dent or scratch</span></li>
-              <li className="flex items-start gap-2.5"><Dot/><span>A <b className="font-semibold text-slate-700">different angle</b> to catch hidden damage</span></li>
+              {(customTips && customTips.length > 0
+                ? customTips
+                : [
+                    'A **wide shot** of the whole damaged area',
+                    'A **close-up** of the worst dent or scratch',
+                    'A **different angle** to catch hidden damage',
+                  ]
+              ).map((tip, i) => (
+                <li key={i} className="flex items-start gap-2.5"><Dot/><span>{renderTip(tip)}</span></li>
+              ))}
             </ul>
           </div>
         )}
@@ -243,9 +256,13 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
               className="mt-0.5 w-5 h-5 shrink-0 accent-brand-navy cursor-pointer"
             />
             <span className="text-xs text-slate-600 leading-relaxed">
-              <span className="font-semibold text-slate-800">I understand this is a free AI estimate for general information only</span> —
-              not a quote, appraisal, or guarantee. Actual repair costs may be higher or lower, photos can't reveal hidden damage,
-              and I'll confirm any coverage or claim decision with my insurer.
+              {consentText || (
+                <>
+                  <span className="font-semibold text-slate-800">I understand this is a free AI estimate for general information only</span> —
+                  not a quote, appraisal, or guarantee. Actual repair costs may be higher or lower, photos can't reveal hidden damage,
+                  and I'll confirm any coverage or claim decision with my insurer.
+                </>
+              )}
             </span>
           </label>
 
@@ -287,5 +304,11 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
 const Dot: React.FC = () => (
   <span className="w-1.5 h-1.5 rounded-full bg-brand-gold shrink-0 mt-[7px]" />
 );
+
+/** Renders "**bold**" segments inside a tip string. */
+const renderTip = (tip: string): React.ReactNode =>
+  tip.split(/\*\*(.*?)\*\*/g).map((part, i) =>
+    i % 2 === 1 ? <b key={i} className="font-semibold text-slate-700">{part}</b> : part
+  );
 
 export default DamageUpload;
