@@ -14,6 +14,7 @@ import HomeProjectForm from './components/HomeProjectForm';
 import HomeEstimateReport from './components/HomeEstimateReport';
 import { generateEstimate, analyzeExistingEstimate, compareEstimates, generateHomeEstimate } from './services/geminiService';
 import { LEGAL } from './config';
+import { getHomePhotoGuide } from './homePhotoGuides';
 
 interface AppProps {
   /** 'auto' = / (car tools) · 'home' = /home/ (home repair & project estimates) */
@@ -199,9 +200,7 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
           customTitle={homeProject.mode === 'damage' ? 'Photos of the Damage' : 'Photos of the Project Area'}
           customSubtitle="Add multiple clear photos from different angles — iPhone photos work great."
           customButtonText="Get My Cost Guide"
-          customTips={homeProject.mode === 'damage'
-            ? ['A **wide shot** of the whole damaged area', 'A **close-up** of the worst spot', 'A **step-back shot** showing the surroundings']
-            : ['A **wide shot** of the area as it looks today', 'A **close-up** of anything worn or being replaced', 'A **second angle** so we can judge the size']}
+          photoGuide={getHomePhotoGuide(homeProject)}
           consentText={LEGAL.homeConsent}
           onImagesCaptured={handleHomeAnalysis}
           onBack={() => setStep(AppStep.HomeIntake)}

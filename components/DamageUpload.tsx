@@ -2,6 +2,8 @@
 import React, { useRef, useState } from 'react';
 import DocumentScanner from './DocumentScanner';
 import StepIndicator from './StepIndicator';
+import PhotoGuideOverlay from './PhotoGuideOverlay';
+import { PhotoGuide } from '../homePhotoGuides';
 import { LEGAL } from '../config';
 
 interface DamageUploadProps {
@@ -16,6 +18,8 @@ interface DamageUploadProps {
   customTips?: string[];
   /** Override the consent checkbox copy (home flow uses contractor wording). */
   consentText?: React.ReactNode;
+  /** Category-specific photo coaching — pops up automatically on arrival. */
+  photoGuide?: PhotoGuide;
 }
 
 const DamageUpload: React.FC<DamageUploadProps> = ({
@@ -26,12 +30,15 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
   customSubtitle,
   customButtonText,
   customTips,
-  consentText
+  consentText,
+  photoGuide
 }) => {
   const [previews, setPreviews] = useState<string[]>([]);
   const [showScanner, setShowScanner] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [agreed, setAgreed] = useState(false);
+  // Photo coaching pops up automatically when a guide is provided.
+  const [showGuide, setShowGuide] = useState(!!photoGuide);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isDoc = mode === 'document';
@@ -170,9 +177,21 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
 
         {!isDoc && (
           <div className="mb-5 rounded-xl bg-blue-50/70 ring-1 ring-blue-100 p-4">
-            <p className="text-xs font-bold text-brand-navy uppercase tracking-wide mb-2">📸 For the best estimate, add:</p>
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <p className="text-xs font-bold text-brand-navy uppercase tracking-wide">📸 For the best estimate, add:</p>
+              {photoGuide && (
+                <button
+                  onClick={() => setShowGuide(true)}
+                  className="shrink-0 text-xs font-bold text-brand-navy underline underline-offset-2 hover:text-brand-navy-dk"
+                >
+                  Photo guide
+                </button>
+              )}
+            </div>
             <ul className="text-sm text-slate-600 space-y-1.5">
-              {(customTips && customTips.length > 0
+              {(photoGuide
+                ? photoGuide.shots.map(s => `**${s.label}**`)
+                : customTips && customTips.length > 0
                 ? customTips
                 : [
                     'A **wide shot** of the whole damaged area',
@@ -218,7 +237,7 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
               </svg>
             </div>
             <span className="text-[10px] font-bold text-slate-500 uppercase">
-              Scan Page
+              {isDoc ? 'Scan Page' : 'Use Camera'}
             </span>
           </button>
 
@@ -289,13 +308,17 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
       </div>
 
       {showScanner && (
-        <DocumentScanner 
+        <DocumentScanner
           onCapture={(img) => {
             setPreviews(prev => [...prev, img]);
             setShowScanner(false);
           }}
           onClose={() => setShowScanner(false)}
         />
+      )}
+
+      {photoGuide && showGuide && (
+        <PhotoGuideOverlay guide={photoGuide} onClose={() => setShowGuide(false)} />
       )}
     </>
   );
