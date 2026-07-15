@@ -16,7 +16,16 @@ const HomeLanding: React.FC<HomeLandingProps> = ({ onStart }) => {
     <div className="animate-fadeIn">
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative overflow-hidden rounded-3xl shadow-lg mb-8 bg-brand-navy-deep md:min-h-[480px] md:flex md:items-center">
-        {/* Optional future render (IMAGES.homeHero) — falls back to the on-brand gradient */}
+        {/* MOBILE: purpose-built 3:2 scene as a top band (full image, no crop) */}
+        {IMAGES.homeHeroMobile && (
+          <div
+            className="md:hidden aspect-[3/2] bg-cover bg-no-repeat bg-center"
+            style={{ backgroundImage: `url("${IMAGES.homeHeroMobile}")` }}
+            role="img"
+            aria-label="A phone photographing a home, with an instant repair-cost estimate card"
+          />
+        )}
+        {/* DESKTOP: optional full-bleed render (IMAGES.homeHero) — falls back to the on-brand gradient */}
         {IMAGES.homeHero ? (
           <div
             className="hidden md:block absolute inset-0 bg-no-repeat bg-cover bg-[position:right_30%]"
@@ -107,16 +116,22 @@ const HomeLanding: React.FC<HomeLandingProps> = ({ onStart }) => {
         <WhyCard
           title="“Is it even worth a claim?”"
           desc="After a storm, the big question is whether the repair cost clears your deductible. Get a realistic range first — then decide with clear eyes. Nothing here files a claim."
+          img={IMAGES.homeWhyClaim}
+          imgAlt="Homeowner photographing storm damage on a shingle roof"
           icon={<svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>}
         />
         <WhyCard
           title="Budget before you call"
           desc="Replacing a deck, roof, or flooring? Know a fair NC price range before the first contractor visit — no more guessing whether a quote is high, low, or right on."
+          img={IMAGES.homeWhyBudget}
+          imgAlt="A brand-new composite deck at golden hour"
           icon={<svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>}
         />
         <WhyCard
           title="No waiting on contractors"
           desc="Contractors are booked out for weeks. Get your preliminary number today, so you can plan, save, and schedule with confidence — not in the dark."
+          img={IMAGES.homeWhyWaiting}
+          imgAlt="Homeowner on the porch checking an estimate on their phone"
           icon={<svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
         />
       </div>
@@ -205,13 +220,23 @@ const HomeLanding: React.FC<HomeLandingProps> = ({ onStart }) => {
   );
 };
 
-const WhyCard: React.FC<{ title: string; desc: string; icon: React.ReactNode }> = ({ title, desc, icon }) => (
-  <div className="bg-white p-6 rounded-2xl shadow-sm ring-1 ring-slate-200/70 flex flex-col">
-    <div className="w-14 h-14 rounded-2xl bg-brand-navy text-white flex items-center justify-center mb-4 shadow-md">
-      {icon}
+const WhyCard: React.FC<{ title: string; desc: string; icon: React.ReactNode; img?: string; imgAlt?: string }> = ({ title, desc, icon, img, imgAlt }) => (
+  <div className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200/70 flex flex-col overflow-hidden">
+    {/* Photo top (Bill's renders) — falls back to the icon block when '' */}
+    {img ? (
+      <div className="aspect-[16/10] bg-brand-navy-deep">
+        <img src={img} alt={imgAlt || ''} className="w-full h-full object-cover" loading="lazy" />
+      </div>
+    ) : null}
+    <div className="p-6 flex flex-col flex-grow">
+      {!img && (
+        <div className="w-14 h-14 rounded-2xl bg-brand-navy text-white flex items-center justify-center mb-4 shadow-md">
+          {icon}
+        </div>
+      )}
+      <h4 className="text-lg font-bold text-slate-800 mb-1.5 font-display">{title}</h4>
+      <p className="text-sm text-slate-500">{desc}</p>
     </div>
-    <h4 className="text-lg font-bold text-slate-800 mb-1.5 font-display">{title}</h4>
-    <p className="text-sm text-slate-500">{desc}</p>
   </div>
 );
 

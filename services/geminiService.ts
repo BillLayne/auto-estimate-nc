@@ -87,18 +87,36 @@ async function callWorker(model: string, contents: any, systemInstruction?: stri
   if (generationConfig) {
     payload.generationConfig = generationConfig;
   }
+  const body = JSON.stringify(payload);
 
-  const resp = await fetch(`${API_BASE}/api/auto/generate`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-
-  if (!resp.ok) {
-    const errText = await resp.text();
-    throw new Error(`API error ${resp.status}: ${errText}`);
+  // Gemini occasionally returns transient 503 "overloaded" — retry with backoff
+  // instead of failing the customer on the first hiccup.
+  const MAX_ATTEMPTS = 3;
+  let lastError: Error = new Error('Request failed');
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    let resp: Response | null = null;
+    try {
+      resp = await fetch(`${API_BASE}/api/auto/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body,
+      });
+    } catch (e: any) {
+      // Network-level failure — worth a retry.
+      lastError = e instanceof Error ? e : new Error(String(e));
+    }
+    if (resp) {
+      if (resp.ok) return resp.json();
+      const errText = await resp.text();
+      lastError = new Error(`API error ${resp.status}: ${errText}`);
+      // Only transient upstream errors are retryable (worker maps Gemini failures to 502).
+      if (![502, 503, 529].includes(resp.status)) throw lastError;
+    }
+    if (attempt < MAX_ATTEMPTS) {
+      await new Promise(r => setTimeout(r, attempt * 2000));
+    }
   }
-  return resp.json();
+  throw lastError;
 }
 
 function extractText(result: any): string {

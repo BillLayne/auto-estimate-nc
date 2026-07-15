@@ -20,6 +20,8 @@ interface DamageUploadProps {
   consentText?: React.ReactNode;
   /** Category-specific photo coaching — pops up automatically on arrival. */
   photoGuide?: PhotoGuide;
+  /** Photos to restore (e.g. returning after a failed API call) — nothing is lost. */
+  initialImages?: string[];
 }
 
 const DamageUpload: React.FC<DamageUploadProps> = ({
@@ -31,14 +33,16 @@ const DamageUpload: React.FC<DamageUploadProps> = ({
   customButtonText,
   customTips,
   consentText,
-  photoGuide
+  photoGuide,
+  initialImages
 }) => {
-  const [previews, setPreviews] = useState<string[]>([]);
+  const [previews, setPreviews] = useState<string[]>(initialImages || []);
   const [showScanner, setShowScanner] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [agreed, setAgreed] = useState(false);
-  // Photo coaching pops up automatically when a guide is provided.
-  const [showGuide, setShowGuide] = useState(!!photoGuide);
+  // Photo coaching pops up automatically when a guide is provided —
+  // but not when returning with photos already added (e.g. after a retry).
+  const [showGuide, setShowGuide] = useState(!!photoGuide && !(initialImages && initialImages.length > 0));
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isDoc = mode === 'document';

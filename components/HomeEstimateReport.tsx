@@ -328,8 +328,8 @@ const HomeEstimateReport: React.FC<HomeEstimateReportProps> = ({ report, project
         </div>
       </div>
 
-      {/* HIDDEN PRINT LAYOUT (LETTERHEAD) */}
-      <div id="letterhead-report" className="hidden print:block bg-white p-12 text-slate-900" style={{ minHeight: '1000px' }}>
+      {/* HIDDEN PRINT LAYOUT (US Letter letterhead) */}
+      <div id="letterhead-report" className="hidden print:block bg-white text-slate-900">
         <div className="border-b-4 border-blue-900 pb-6 mb-8 flex justify-between items-end">
           <div>
             <h1 className="text-3xl font-black text-blue-900">BILL LAYNE</h1>
@@ -395,9 +395,9 @@ const HomeEstimateReport: React.FC<HomeEstimateReportProps> = ({ report, project
         </div>
 
         {reportImages.length > 0 && (
-          <div className="mb-10">
+          <div className="mb-10 print-block">
             <h3 className="text-xs font-black text-slate-400 uppercase mb-3 border-b tracking-widest">Photo References</h3>
-            <div className="flex flex-wrap gap-4 mt-4">
+            <div className="flex flex-wrap gap-4 mt-4 print-photos">
               {reportImages.map((src, i) => (
                 <div key={i} className="border rounded p-1 bg-white shadow-sm">
                   <img src={src} className="h-32 w-32 object-cover rounded" alt={`Photo ${i + 1}`} />
@@ -407,7 +407,7 @@ const HomeEstimateReport: React.FC<HomeEstimateReportProps> = ({ report, project
           </div>
         )}
 
-        <div className="mt-12 p-6 bg-slate-50 rounded border-2 border-slate-200 text-xs leading-relaxed text-slate-600">
+        <div className="mt-12 p-6 bg-slate-50 rounded border-2 border-slate-200 text-xs leading-relaxed text-slate-600 print-block">
           <p className="mb-2 font-bold text-slate-800 uppercase tracking-wider underline">Legal Notice &amp; Disclaimer:</p>
           {LEGAL.full}
         </div>
@@ -419,9 +419,23 @@ const HomeEstimateReport: React.FC<HomeEstimateReportProps> = ({ report, project
 
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
+          /* Fit US Letter (8.5x11) — page margins do the framing, not padding */
+          @page { size: letter portrait; margin: 0.5in; }
+          html, body { background: #fff !important; }
           body * { visibility: hidden; }
           #letterhead-report, #letterhead-report * { visibility: visible; }
-          #letterhead-report { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 40px; }
+          #letterhead-report {
+            position: absolute; left: 0; top: 0; width: 100%;
+            margin: 0; padding: 0 !important; min-height: 0 !important;
+            -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            font-size: 12px;
+          }
+          /* Never split a table row or key block across pages */
+          #letterhead-report tr { page-break-inside: avoid; }
+          #letterhead-report h3 { page-break-after: avoid; }
+          #letterhead-report .print-block { page-break-inside: avoid; }
+          /* Keep photo references compact so they share a page */
+          #letterhead-report .print-photos img { height: 1.35in !important; width: 1.35in !important; }
         }
       `}} />
     </div>

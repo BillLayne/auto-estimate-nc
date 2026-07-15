@@ -136,6 +136,8 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
   // Flow D Handlers (Home Estimate)
   const handleHomeStart = (mode: HomeProjectMode) => {
     setHomeProject({ ...EMPTY_HOME_PROJECT, mode });
+    setCapturedImages([]);
+    setHomeReport(null);
     setStep(AppStep.HomeIntake);
   };
 
@@ -202,6 +204,7 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
           customButtonText="Get My Cost Guide"
           photoGuide={getHomePhotoGuide(homeProject)}
           consentText={LEGAL.homeConsent}
+          initialImages={capturedImages}
           onImagesCaptured={handleHomeAnalysis}
           onBack={() => setStep(AppStep.HomeIntake)}
         />

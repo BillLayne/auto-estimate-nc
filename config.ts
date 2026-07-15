@@ -24,11 +24,18 @@ export const IMAGES = {
   /** Legacy transparent foreground (kept for the old layout / fallback). */
   heroForeground: asset('hero-foreground.webp'),
   /**
-   * /home/ landing hero scene — waiting on Bill's render (same trick as the car:
-   * generate on SOLID deep navy #001a3d, e.g. a house + phone + glowing repair-cost
+   * /home/ landing hero scenes — waiting on Bill's renders (same trick as the car:
+   * generate on SOLID deep navy #001a3d; house + phone + glowing "$4,850 – $7,200"
    * card). '' = on-brand navy/gold gradient fallback, nothing looks broken.
+   * Desktop = 16:9 full-bleed bg with dark-left negative space for the headline.
+   * Mobile = purpose-built 3:2 centered scene shown uncropped as a top band.
    */
   homeHero: '',
+  homeHeroMobile: '',
+  /** "Why homeowners use this" card photos (16:10). '' = icon-only cards. */
+  homeWhyClaim: '',
+  homeWhyBudget: '',
+  homeWhyWaiting: '',
 };
 
 /** Agency contact details — single source of truth for header/footer. */
