@@ -9,7 +9,25 @@ interface EstimateReportProps {
   onReset: () => void;
 }
 
+const SDIP_URL = 'https://www.billlayneinsurance.com/auto-center/sdip-points-calculator/';
+
+/** Client-side "should I file a claim?" verdict — the deductible never goes to the AI. */
+type ClaimVerdict =
+  | { kind: 'below'; ded: number }
+  | { kind: 'close'; ded: number }
+  | { kind: 'above'; ded: number }
+  | { kind: 'unknown' };
+
+function getClaimVerdict(deductible: string | undefined, total: number): ClaimVerdict {
+  if (!deductible || !/^\d+$/.test(deductible)) return { kind: 'unknown' };
+  const ded = parseInt(deductible, 10);
+  if (total < ded) return { kind: 'below', ded };
+  if (total < ded * 1.5) return { kind: 'close', ded };
+  return { kind: 'above', ded };
+}
+
 const EstimateReport: React.FC<EstimateReportProps> = ({ report, reportImages, onReset }) => {
+  const verdict = getClaimVerdict(report.vehicle.deductible, report.totalEstimate);
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Visual Header */}
@@ -40,21 +58,58 @@ const EstimateReport: React.FC<EstimateReportProps> = ({ report, reportImages, o
         </div>
       </div>
 
-      {/* Talk-to-Bill conversion CTA */}
-      <div className="bg-gradient-to-br from-brand-navy-deep via-brand-navy to-brand-navy-dk rounded-2xl shadow-lg p-6 sm:p-7 no-print flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
-        <div className="flex-grow">
-          <h3 className="text-white font-bold text-lg font-display">Questions about this estimate?</h3>
-          <p className="text-blue-100 text-sm mt-1">Bill can tell you whether it's worth filing a claim, and what it might do to your rate. No pressure — just a quick, honest answer.</p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-2.5 w-full sm:w-auto shrink-0">
+      {/* Should you file a claim? — deductible-aware verdict (computed client-side) */}
+      <div className="bg-gradient-to-br from-brand-navy-deep via-brand-navy to-brand-navy-dk rounded-2xl shadow-lg p-6 sm:p-7 no-print">
+        <h3 className="text-white font-bold text-lg font-display flex items-center gap-2">
+          <svg className="w-5 h-5 text-brand-gold-lt" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+          Should you file a claim?
+        </h3>
+
+        {(verdict.kind === 'below' || verdict.kind === 'close' || verdict.kind === 'above') && (
+          <div className="mt-4 bg-white/10 rounded-xl p-4 flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex items-center gap-6 text-center">
+              <div>
+                <p className="text-[10px] uppercase tracking-wider text-blue-200 font-bold">Estimated repairs</p>
+                <p className="text-white font-extrabold text-lg font-display">${report.totalEstimate.toLocaleString()}</p>
+              </div>
+              <span className="text-blue-200 text-xl font-light">vs</span>
+              <div>
+                <p className="text-[10px] uppercase tracking-wider text-blue-200 font-bold">Your deductible</p>
+                <p className="text-brand-gold-lt font-extrabold text-lg font-display">${verdict.ded.toLocaleString()}</p>
+              </div>
+            </div>
+            <p className="text-blue-50 text-sm sm:border-l sm:border-white/20 sm:pl-4">
+              {verdict.kind === 'below' && "This estimate is below your deductible — you'd pay for the repair yourself either way, so many drivers handle one like this out of pocket rather than file. Every situation is different, though."}
+              {verdict.kind === 'close' && "This estimate is only a little above your deductible — after you pay the deductible, the claim check would be small, and an at-fault claim can raise your rate for years. A genuinely close call worth talking through."}
+              {verdict.kind === 'above' && "This estimate runs well above your deductible — a claim may be worth filing. Just remember an at-fault claim can affect your rate, so it's worth a quick look first."}
+            </p>
+          </div>
+        )}
+
+        {verdict.kind === 'unknown' && (
+          <p className="mt-3 text-blue-50 text-sm">
+            Compare this estimate against your <b>collision deductible</b> — that's the first number to weigh before filing.
+            Not sure what yours is? We can look it up in about a minute.
+          </p>
+        )}
+
+        <p className="mt-3 text-blue-100/90 text-sm leading-relaxed">
+          Heads up: an at-fault accident can raise your premium for years. See roughly how much with our free{' '}
+          <a href={SDIP_URL} target="_blank" rel="noopener noreferrer" className="text-brand-gold-lt font-bold underline hover:text-white">SDIP Points Calculator</a>.
+        </p>
+
+        <div className="mt-5 flex flex-col sm:flex-row gap-2.5">
           <a href={AGENCY.phoneHref} className="px-5 py-3 rounded-xl bg-gold-grad text-brand-navy-deep font-bold text-sm hover:bg-gold-grad-hover transition-all shadow-glow-gold flex items-center justify-center gap-2 whitespace-nowrap">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79a15.53 15.53 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.56.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.56 1 1 0 01-.24 1.01l-2.2 2.22z"/></svg>
-            {AGENCY.phone}
+            Call Bill first — {AGENCY.phone}
           </a>
-          <a href={AGENCY.emailHref} className="px-5 py-3 rounded-xl bg-white/10 text-white font-semibold text-sm hover:bg-white/20 transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
-            Email Bill
+          <a href={AGENCY.emailHref} className="px-5 py-3 rounded-xl bg-white/10 text-white font-semibold text-sm hover:bg-white/20 transition-colors flex items-center justify-center whitespace-nowrap">
+            Email Us
           </a>
         </div>
+        <p className="text-[11px] text-blue-200/70 mt-3">
+          Nothing here files a claim or contacts your insurance company. Deciding whether to file is always your call — we're just here to help you make it with real numbers.
+        </p>
       </div>
 
       {/* Main Content (Dashboard) */}

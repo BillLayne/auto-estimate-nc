@@ -211,8 +211,8 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Model</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   name="model"
                   value={vehicleData.model}
                   onChange={handleVehicleChange}
@@ -220,6 +220,26 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-navy focus:border-brand-navy outline-none transition-all text-base"
                 />
               </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Your collision deductible <span className="text-slate-400 font-normal">(optional)</span>
+              </label>
+              <select
+                name="deductible"
+                value={vehicleData.deductible || ''}
+                onChange={handleVehicleChange}
+                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-navy focus:border-brand-navy outline-none transition-all text-base bg-white"
+              >
+                <option value="">Not sure / skip</option>
+                <option value="250">$250</option>
+                <option value="500">$500</option>
+                <option value="1000">$1,000</option>
+                <option value="2500">$2,500</option>
+                <option value="5000">$5,000</option>
+              </select>
+              <p className="text-xs text-slate-400 mt-1">So we can tell you whether it's worth filing a claim. Stays on your device &mdash; never sent to the AI.</p>
             </div>
           </section>
 

@@ -39,7 +39,8 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
     year: '',
     make: '',
     model: '',
-    mileage: ''
+    mileage: '',
+    deductible: ''
   });
   const [customer, setCustomer] = useState<CustomerInfo>({
     firstName: '',
@@ -75,10 +76,13 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
       setTimeout(() => setLoadingMsg('Finalizing Preliminary Guide...'), 6000);
 
       const result = await generateEstimate(vehicle, imagesData);
-      
+
       const fullReport: EstimateResult = {
         ...result,
-        customer: customer
+        customer: customer,
+        // Keep the customer's inputs (incl. their deductible) over the AI's echo;
+        // the deductible is compared client-side and never sent to the AI.
+        vehicle: { ...vehicle, ...(result.vehicle || {}) }
       };
       
       setReport(fullReport);

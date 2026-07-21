@@ -5,6 +5,8 @@ export interface VehicleInfo {
   make: string;
   model: string;
   mileage: string;
+  /** Optional collision deductible — compared client-side, never sent to the AI */
+  deductible?: string;
 }
 
 export interface CustomerInfo {
