@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AppStep, VehicleInfo, CustomerInfo, EstimateResult, SimplifiedEstimateResult, ComparisonResult, HomeProjectInfo, HomeProjectMode, HomeEstimateResult } from './types';
 import Layout from './components/Layout';
@@ -31,8 +30,14 @@ const EMPTY_HOME_PROJECT: HomeProjectInfo = {
 };
 
 const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
-  const [step, setStep] = useState<AppStep>(variant === 'home' ? AppStep.HomeLanding : AppStep.ModeSelection);
-  
+  const [step, setStepState] = useState<AppStep>(variant === 'home' ? AppStep.HomeLanding : AppStep.ModeSelection);
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const setStep = (nextStep: AppStep) => {
+    setApiError(null);
+    setStepState(nextStep);
+  };
+
   // State for Flow A (New Estimate)
   const [vehicle, setVehicle] = useState<VehicleInfo>({
     vin: '',
@@ -50,12 +55,14 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
   });
   const [report, setReport] = useState<EstimateResult | null>(null);
   const [capturedImages, setCapturedImages] = useState<string[]>([]);
-  
+
   // State for Flow B (Simplification)
+  const [simpleFiles, setSimpleFiles] = useState<string[]>([]);
   const [simpleReport, setSimpleReport] = useState<SimplifiedEstimateResult | null>(null);
 
   // State for Flow C (Comparison)
   const [comparisonFilesA, setComparisonFilesA] = useState<string[]>([]);
+  const [comparisonFilesB, setComparisonFilesB] = useState<string[]>([]);
   const [comparisonResult, setComparisonResult] = useState<ComparisonResult | null>(null);
 
   // State for Flow D (Home Estimate — /home/)
@@ -67,13 +74,14 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
   // Flow A Handler
   const handleStartAnalysis = async (imagesData: string[]) => {
     setCapturedImages(imagesData);
-    setStep(AppStep.Processing);
-    setLoadingMsg('Scanning Multi-Angle Damage...');
-    
+    setApiError(null);
+    setStepState(AppStep.Processing);
+    setLoadingMsg('Reviewing Vehicle Photos...');
+
     try {
-      setTimeout(() => setLoadingMsg('Cross-Referencing Angles...'), 2000);
-      setTimeout(() => setLoadingMsg('Fetching NC Market Data...'), 4000);
-      setTimeout(() => setLoadingMsg('Finalizing Preliminary Guide...'), 6000);
+      setTimeout(() => setLoadingMsg('Checking Multi-Angle Damage...'), 2000);
+      setTimeout(() => setLoadingMsg('Checking NC Parts & Labor Benchmarks...'), 4000);
+      setTimeout(() => setLoadingMsg('Preparing Preliminary Cost Guide...'), 6000);
 
       const result = await generateEstimate(vehicle, imagesData);
 
@@ -84,56 +92,61 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
         // the deductible is compared client-side and never sent to the AI.
         vehicle: { ...vehicle, ...(result.vehicle || {}) }
       };
-      
+
       setReport(fullReport);
-      setStep(AppStep.Report);
+      setStepState(AppStep.Report);
     } catch (error) {
-      alert("Failed to generate guide. Please check your network and try again.");
-      setStep(AppStep.Analysis);
+      console.error(error);
+      setApiError('We could not complete the cost guide right now. Your photos and vehicle details are saved below — please try again.');
+      setStepState(AppStep.Analysis);
     }
   };
 
   // Flow B Handler
   const handleSimplification = async (filesData: string[]) => {
-    setCapturedImages(filesData); // Store specifically for preview if needed, though mostly doc scan
-    setStep(AppStep.ProcessingSimplification);
+    setSimpleFiles(filesData);
+    setApiError(null);
+    setStepState(AppStep.ProcessingSimplification);
     setLoadingMsg('Reading Estimate Document...');
 
     try {
-      setTimeout(() => setLoadingMsg('Translating Body Shop Jargon...'), 2000);
-      setTimeout(() => setLoadingMsg('Simplifying Line Items...'), 3500);
-      
+      setTimeout(() => setLoadingMsg('Translating Repair Terms...'), 2000);
+      setTimeout(() => setLoadingMsg('Organizing Plain-English Breakdown...'), 3500);
+
       const result = await analyzeExistingEstimate(filesData);
       setSimpleReport(result);
-      setStep(AppStep.SimplifiedReport);
+      setStepState(AppStep.SimplifiedReport);
     } catch (error) {
       console.error(error);
-      alert("Failed to analyze the document. Please ensure the image is clear.");
-      setStep(AppStep.UploadEstimate);
+      setApiError('We could not read that estimate right now. Your uploaded pages are saved below — please ensure the text is clear and try again.');
+      setStepState(AppStep.UploadEstimate);
     }
   };
 
   // Flow C Handler (Comparison)
   const handleComparisonStep1 = (filesData: string[]) => {
     setComparisonFilesA(filesData);
-    setStep(AppStep.UploadComparisonB);
+    setApiError(null);
+    setStepState(AppStep.UploadComparisonB);
   };
 
   const handleComparisonStep2 = async (filesDataB: string[]) => {
-    setStep(AppStep.ProcessingComparison);
-    setLoadingMsg('Comparing Estimate Data...');
+    setComparisonFilesB(filesDataB);
+    setApiError(null);
+    setStepState(AppStep.ProcessingComparison);
+    setLoadingMsg('Comparing Both Estimates...');
 
     try {
-      setTimeout(() => setLoadingMsg('Analyzing Line Item Differences...'), 2000);
-      setTimeout(() => setLoadingMsg('Generating Review...'), 4000);
+      setTimeout(() => setLoadingMsg('Reviewing Parts, Labor & Scope Differences...'), 2000);
+      setTimeout(() => setLoadingMsg('Preparing Side-by-Side Summary...'), 4000);
 
       const result = await compareEstimates(comparisonFilesA, filesDataB);
       setComparisonResult(result);
-      setStep(AppStep.ComparisonReport);
+      setStepState(AppStep.ComparisonReport);
     } catch (error) {
       console.error(error);
-      alert("Failed to compare estimates. Please try again.");
-      setStep(AppStep.ModeSelection);
+      setApiError('We could not complete the comparison right now. Both uploaded estimates are saved — please try again.');
+      setStepState(AppStep.UploadComparisonB);
     }
   };
 
@@ -142,12 +155,14 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
     setHomeProject({ ...EMPTY_HOME_PROJECT, mode });
     setCapturedImages([]);
     setHomeReport(null);
-    setStep(AppStep.HomeIntake);
+    setApiError(null);
+    setStepState(AppStep.HomeIntake);
   };
 
   const handleHomeAnalysis = async (imagesData: string[]) => {
     setCapturedImages(imagesData);
-    setStep(AppStep.ProcessingHome);
+    setApiError(null);
+    setStepState(AppStep.ProcessingHome);
     setLoadingMsg('Reviewing Your Photos...');
 
     try {
@@ -157,25 +172,28 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
 
       const result = await generateHomeEstimate(homeProject, imagesData);
       setHomeReport(result);
-      setStep(AppStep.HomeReport);
+      setStepState(AppStep.HomeReport);
     } catch (error) {
       console.error(error);
-      alert("Failed to generate the cost guide. Please check your network and try again.");
-      setStep(AppStep.HomeAnalysis);
+      setApiError('We could not generate the cost guide right now. Your photos and project details are saved below — please try again.');
+      setStepState(AppStep.HomeAnalysis);
     }
   };
 
   const handleReset = () => {
-    setVehicle({ vin: '', year: '', make: '', model: '', mileage: '' });
+    setVehicle({ vin: '', year: '', make: '', model: '', mileage: '', deductible: '' });
     setCustomer({ firstName: '', lastName: '', address: '', email: '' });
     setReport(null);
     setSimpleReport(null);
     setComparisonResult(null);
     setCapturedImages([]);
+    setSimpleFiles([]);
     setComparisonFilesA([]);
+    setComparisonFilesB([]);
     setHomeProject(EMPTY_HOME_PROJECT);
     setHomeReport(null);
-    setStep(variant === 'home' ? AppStep.HomeLanding : AppStep.ModeSelection);
+    setApiError(null);
+    setStepState(variant === 'home' ? AppStep.HomeLanding : AppStep.ModeSelection);
   };
 
   return (
@@ -209,6 +227,7 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
           photoGuide={getHomePhotoGuide(homeProject)}
           consentText={LEGAL.homeConsent}
           initialImages={capturedImages}
+          errorBanner={apiError}
           onImagesCaptured={handleHomeAnalysis}
           onBack={() => setStep(AppStep.HomeIntake)}
         />
@@ -216,9 +235,9 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
 
       {step === AppStep.ProcessingHome && (
         <div className="flex flex-col items-center justify-center min-h-[50vh]">
-          <div className="w-20 h-20 border-4 border-brand-navy border-t-brand-gold rounded-full animate-spin mb-6"></div>
-          <h2 className="text-2xl font-bold text-slate-800 font-display text-center px-4">{loadingMsg}</h2>
-          <p className="text-slate-500 mt-2 text-center max-w-sm px-4">
+          <div className="w-16 h-16 border-4 border-[#0A1F44] border-t-[#E8B84B] rounded-full animate-spin mb-6"></div>
+          <h2 className="text-2xl font-bold text-[#0A1F44] font-display text-center px-4">{loadingMsg}</h2>
+          <p className="text-[#6B7280] mt-2 text-center max-w-sm px-4">
             Building your preliminary cost range from current NC material prices and contractor labor rates.
           </p>
         </div>
@@ -246,35 +265,41 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
       )}
 
       {step === AppStep.Analysis && (
-        <DamageUpload 
+        <DamageUpload
           mode="damage"
-          onImagesCaptured={handleStartAnalysis} 
-          onBack={() => setStep(AppStep.Intake)} 
+          initialImages={capturedImages}
+          errorBanner={apiError}
+          onImagesCaptured={handleStartAnalysis}
+          onBack={() => setStep(AppStep.Intake)}
         />
       )}
 
       {step === AppStep.Processing && (
         <div className="flex flex-col items-center justify-center min-h-[50vh]">
-          <div className="w-20 h-20 border-4 border-brand-navy border-t-brand-gold rounded-full animate-spin mb-6"></div>
-          <h2 className="text-2xl font-bold text-slate-800 font-display text-center px-4">{loadingMsg}</h2>
-          <p className="text-slate-500 mt-2 text-center max-w-sm px-4">
-            Searching for regional NC part prices and building your personalized guide.
+          <div className="w-16 h-16 border-4 border-[#0A1F44] border-t-[#E8B84B] rounded-full animate-spin mb-6"></div>
+          <h2 className="text-2xl font-bold text-[#0A1F44] font-display text-center px-4">{loadingMsg}</h2>
+          <p className="text-[#6B7280] mt-2 text-center max-w-sm px-4">
+            Reviewing your vehicle photos and preparing your preliminary repair-cost guide.
           </p>
         </div>
       )}
 
       {step === AppStep.Report && report && (
-        <EstimateReport 
-          report={report} 
+        <EstimateReport
+          report={report}
           reportImages={capturedImages}
-          onReset={handleReset} 
+          onReset={handleReset}
         />
       )}
 
       {/* FLOW B: ESTIMATE TRANSLATOR */}
       {step === AppStep.UploadEstimate && (
-        <DamageUpload 
+        <DamageUpload
           mode="document"
+          customTitle="Explain a Repair Estimate"
+          customSubtitle="Upload photos or a PDF of your shop estimate for a plain-English breakdown."
+          initialImages={simpleFiles}
+          errorBanner={apiError}
           onImagesCaptured={handleSimplification}
           onBack={() => setStep(AppStep.ModeSelection)}
         />
@@ -282,16 +307,16 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
 
       {step === AppStep.ProcessingSimplification && (
         <div className="flex flex-col items-center justify-center min-h-[50vh]">
-          <div className="w-20 h-20 border-4 border-brand-navy border-t-brand-gold rounded-full animate-spin mb-6"></div>
-          <h2 className="text-2xl font-bold text-slate-800 font-display text-center px-4">{loadingMsg}</h2>
-          <p className="text-slate-500 mt-2 text-center max-w-sm px-4">
-            Our AI is reading the PDF/Image and translating technical terms into plain English.
+          <div className="w-16 h-16 border-4 border-[#0A1F44] border-t-[#E8B84B] rounded-full animate-spin mb-6"></div>
+          <h2 className="text-2xl font-bold text-[#0A1F44] font-display text-center px-4">{loadingMsg}</h2>
+          <p className="text-[#6B7280] mt-2 text-center max-w-sm px-4">
+            Reading your estimate document and translating repair terms into plain English.
           </p>
         </div>
       )}
 
       {step === AppStep.SimplifiedReport && simpleReport && (
-        <SimplifiedReport 
+        <SimplifiedReport
           data={simpleReport}
           onReset={handleReset}
         />
@@ -301,9 +326,11 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
       {step === AppStep.UploadComparisonA && (
         <DamageUpload
           mode="document"
-          customTitle="Upload First Estimate (Shop A)"
-          customSubtitle="Take photos or upload the PDF for the first estimate."
+          customTitle="Compare Two Estimates — First Estimate (Shop A)"
+          customSubtitle="Take photos or choose the PDF for the first repair estimate."
           customButtonText="Next: Upload Second Estimate"
+          initialImages={comparisonFilesA}
+          errorBanner={apiError}
           onImagesCaptured={handleComparisonStep1}
           onBack={() => setStep(AppStep.ModeSelection)}
         />
@@ -312,9 +339,11 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
       {step === AppStep.UploadComparisonB && (
         <DamageUpload
           mode="document"
-          customTitle="Upload Second Estimate (Shop B)"
-          customSubtitle="Take photos or upload the PDF for the second estimate."
+          customTitle="Compare Two Estimates — Second Estimate (Shop B)"
+          customSubtitle="Take photos or choose the PDF for the second repair estimate."
           customButtonText="Compare Both Estimates"
+          initialImages={comparisonFilesB}
+          errorBanner={apiError}
           onImagesCaptured={handleComparisonStep2}
           onBack={() => setStep(AppStep.UploadComparisonA)}
         />
@@ -322,27 +351,28 @@ const App: React.FC<AppProps> = ({ variant = 'auto' }) => {
 
       {step === AppStep.ProcessingComparison && (
         <div className="flex flex-col items-center justify-center min-h-[50vh]">
-          <div className="w-20 h-20 border-4 border-brand-navy border-t-brand-gold rounded-full animate-spin mb-6"></div>
-          <h2 className="text-2xl font-bold text-slate-800 font-display text-center px-4">{loadingMsg}</h2>
-          <p className="text-slate-500 mt-2 text-center max-w-sm px-4">
-            Our AI is analyzing line-by-line differences between the two shops.
+          <div className="w-16 h-16 border-4 border-[#0A1F44] border-t-[#E8B84B] rounded-full animate-spin mb-6"></div>
+          <h2 className="text-2xl font-bold text-[#0A1F44] font-display text-center px-4">{loadingMsg}</h2>
+          <p className="text-[#6B7280] mt-2 text-center max-w-sm px-4">
+            Reviewing differences in parts, labor, and repair scope between both estimates.
           </p>
         </div>
       )}
 
       {step === AppStep.ComparisonReport && comparisonResult && (
-        <ComparisonReport 
+        <ComparisonReport
           data={comparisonResult}
           onReset={handleReset}
         />
       )}
 
-      {/* SHARED: DOCS */}
+      {/* SHARED: DOCS & PRIVACY */}
       {step === AppStep.Docs && (
-        <ArchitectureDocs />
+        <ArchitectureDocs onBack={() => setStep(variant === 'home' ? AppStep.HomeLanding : AppStep.ModeSelection)} />
       )}
     </Layout>
   );
 };
 
 export default App;
+

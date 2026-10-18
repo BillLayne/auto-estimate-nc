@@ -10,25 +10,26 @@
 const asset = (file: string) => `${import.meta.env.BASE_URL}${file}`;
 
 export const IMAGES = {
-  /**
-   * Full-bleed hero scene (Bill's render i.imgur.com/lKjehnp.png): pearl-white car
-   * + phone + glowing $1,248 card on a SOLID deep-navy background with dark
-   * negative space on the left for the headline. Used as the hero's background
-   * image — no cut-out needed; the navy blends into the hero. '' = gradient only.
-   */
-  heroScene: asset('hero-scene.webp'),
-  /** Purpose-built 3:2 mobile hero (Bill's render i.imgur.com/LDkHokN.png):
-   * centered white car + phone + $1,248 card on navy, designed for the stacked
-   * mobile band (no cropping needed). */
-  heroSceneMobile: asset('hero-mobile.webp'),
-  /** Legacy transparent foreground (kept for the old layout / fallback). */
+  /** Desktop opening panel vehicle-damage photo (1600x900 WebP). */
+  heroDesktop:
+    'https://img.billlayneinsurance.com/i/2026/10/smartphone-captures-minor-suv-fender-dam-j2ys7j.webp',
+  /** Mobile opening vehicle-damage photo (1122x1402 WebP, 4:5 portrait crop). */
+  heroMobile:
+    'https://img.billlayneinsurance.com/i/2026/10/smartphone-captures-silver-suv-fender-da-kb9r3s.webp',
+  /** Repair-estimate explanation section photo (1536x1024 WebP). */
+  estimateSheet:
+    'https://img.billlayneinsurance.com/i/2026/10/blank-auto-estimate-sheet-key-fob-2-79wccd.webp',
+  /** Official Bill Layne Insurance Agency logo (784x248 PNG). */
+  agencyLogo:
+    'https://img.billlayneinsurance.com/i/2026/08/bli-agency-logo-4jqj2j.png',
+  /** Legacy keys kept for backward compatibility. */
+  heroScene:
+    'https://img.billlayneinsurance.com/i/2026/10/smartphone-captures-minor-suv-fender-dam-j2ys7j.webp',
+  heroSceneMobile:
+    'https://img.billlayneinsurance.com/i/2026/10/smartphone-captures-silver-suv-fender-da-kb9r3s.webp',
   heroForeground: asset('hero-foreground.webp'),
   /**
-   * /home/ landing hero scenes — waiting on Bill's renders (same trick as the car:
-   * generate on SOLID deep navy #001a3d; house + phone + glowing "$4,850 – $7,200"
-   * card). '' = on-brand navy/gold gradient fallback, nothing looks broken.
-   * Desktop = 16:9 full-bleed bg with dark-left negative space for the headline.
-   * Mobile = purpose-built 3:2 centered scene shown uncropped as a top band.
+   * /home/ landing hero scenes
    */
   homeHero: asset('hero-home.webp'),
   homeHeroMobile: asset('hero-home-mobile.webp'),
@@ -41,11 +42,14 @@ export const IMAGES = {
 /** Agency contact details — single source of truth for header/footer. */
 export const AGENCY = {
   name: 'Bill Layne Insurance Agency',
-  phone: '(336) 835-1993',
+  phone: '336-835-1993',
+  phoneDisplay: '336-835-1993',
   phoneHref: 'tel:+13368351993',
   email: 'Save@BillLayneInsurance.com',
   emailHref: 'mailto:Save@BillLayneInsurance.com',
   address: '1283 N Bridge St, Elkin, NC 28621',
+  streetAddress: '1283 N Bridge St',
+  cityStateZip: 'Elkin, NC 28621',
   website: 'https://www.billlayneinsurance.com',
   websiteLabel: 'BillLayneInsurance.com',
   year: 2026,

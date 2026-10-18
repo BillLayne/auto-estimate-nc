@@ -1,108 +1,134 @@
-
 import React from 'react';
 import { AGENCY } from '../config';
+
+interface ArchitectureDocsProps {
+  onBack?: () => void;
+}
 
 const STEPS = [
   {
     n: '1',
-    title: 'Tell us a little about your car',
-    body: 'Your name and the year, make, model and mileage. Have the VIN handy? Scan or type it and we fill in the rest automatically.',
+    title: 'Upload your photos',
+    body: 'Share clear photos of the damage to your vehicle (or upload your existing repair estimate PDF/photos).',
   },
   {
     n: '2',
-    title: 'Snap a few photos of the damage',
-    body: 'A wide shot, a close-up, and a different angle work best. Use your phone camera right here — iPhone HEIC photos are fine too.',
+    title: 'Review the cost guide',
+    body: 'Review preliminary repair-cost guidance or plain-English line-item explanations based on your uploads.',
   },
   {
     n: '3',
-    title: 'Get your preliminary estimate',
-    body: 'In about a minute you get a friendly, plain-English repair-cost guide using current North Carolina parts and labor rates — so you can decide your next step.',
+    title: 'Choose your next step',
+    body: 'Use the results to prepare questions for your repair shop, compare two estimates, or talk with our agency.',
   },
 ];
 
-const FAQ = [
+const PRIVACY_ITEMS = [
   {
-    q: 'Is this an official insurance estimate?',
-    a: 'No — it\'s a free, preliminary guide to help you understand likely costs before you file a claim. Your final repair cost is set by a licensed body shop and your insurance adjuster.',
+    title: 'How uploaded photos and estimates are processed',
+    body: 'When you submit vehicle photos or repair-estimate documents, your browser resizes image files locally and transmits them over encrypted HTTPS through our Cloudflare Worker service to Google’s Gemini AI API solely to generate your on-screen cost guide or estimate breakdown.',
   },
   {
-    q: 'Will using this raise my rates or start a claim?',
-    a: 'Not at all. Nothing here files a claim or contacts your insurance company. It\'s just information for you. When you\'re ready, you decide whether to call us.',
+    title: 'Contact details and deductible stay in your browser',
+    body: 'Any customer name, address, email, or collision deductible you enter on the vehicle form is kept in your browser session to format your printable report and compare against your deductible. Those fields are not sent to the AI model or stored in an agency database.',
   },
   {
-    q: 'Do I need an account?',
-    a: 'Nope. No login, no sign-up. It\'s free to use as many times as you like.',
+    title: 'Session retention',
+    body: 'Uploaded images and generated reports remain in your browser memory while your tab stays open so you can review or print your results, or retry if a connection error occurs. Resetting the tool or closing the browser tab clears them from browser memory.',
   },
   {
-    q: 'What if I already have a body-shop estimate?',
-    a: 'Use the "Explain My Estimate" tool to translate the jargon into plain English, or "Compare Two Estimates" to see why two shops priced it differently.',
+    title: 'No automatic claim filing',
+    body: 'Using AutoEstimate NC does not submit an insurance claim, notify any insurance company, or alter your policy. If you want help with a claim or coverage question, contact your insurer or Bill Layne Insurance directly.',
   },
 ];
 
-const ArchitectureDocs: React.FC = () => {
+const ArchitectureDocs: React.FC<ArchitectureDocsProps> = ({ onBack }) => {
   return (
     <div className="max-w-3xl mx-auto space-y-6 animate-fadeIn">
-      {/* Intro */}
-      <section className="relative overflow-hidden rounded-3xl shadow-lg">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-navy-deep via-brand-navy to-brand-navy-dk" />
-        <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-brand-gold/20 blur-3xl" />
-        <div className="relative p-6 sm:p-9 text-center">
-          <span className="inline-block bg-brand-gold/20 border border-brand-gold/40 text-brand-gold-lt text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full mb-3">
-            How it works
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-display">Your estimate in 3 easy steps</h2>
-          <p className="text-blue-100 mt-2 max-w-md mx-auto text-sm sm:text-base">
-            Free, fast, and private. No account, no pressure — just a clear picture of what a repair might cost.
-          </p>
+      {onBack && (
+        <div>
+          <button
+            type="button"
+            onClick={onBack}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0A1F44] hover:underline min-h-[44px] px-1 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0A1F44]"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Back to estimate tools</span>
+          </button>
         </div>
-      </section>
+      )}
 
-      {/* Steps */}
-      <section className="space-y-4">
-        {STEPS.map((s) => (
-          <div key={s.n} className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200/70 p-5 sm:p-6 flex gap-4 items-start">
-            <span className="shrink-0 w-11 h-11 rounded-2xl bg-brand-navy text-white font-extrabold text-lg flex items-center justify-center font-display shadow-md">
-              {s.n}
-            </span>
-            <div>
-              <h3 className="font-bold text-slate-800 font-display text-lg">{s.title}</h3>
-              <p className="text-slate-600 text-sm mt-1 leading-relaxed">{s.body}</p>
+      {/* Privacy & Data Handling */}
+      <section
+        id="privacy"
+        aria-labelledby="privacy-heading"
+        className="bg-white rounded-[20px] border border-[#E2E8F0] shadow-[0_8px_24px_rgba(10,31,68,0.06)] p-6 sm:p-8 scroll-mt-24"
+      >
+        <span className="inline-block bg-[#FAF7F0] border border-[#E2E8F0] text-[#0A1F44] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-md mb-3">
+          Privacy &amp; Data Handling
+        </span>
+        <h1 id="privacy-heading" className="font-display font-bold text-[26px] sm:text-[30px] text-[#0A1F44] leading-[1.2]">
+          How AutoEstimate NC handles your uploads
+        </h1>
+        <p className="text-[#6B7280] text-[16px] mt-2 leading-[1.55]">
+          AutoEstimate NC is designed to give you preliminary repair-cost guidance without requiring an account or submitting a claim.
+        </p>
+
+        <div className="mt-6 space-y-4">
+          {PRIVACY_ITEMS.map((item) => (
+            <div key={item.title} className="rounded-[12px] bg-[#FAF7F0] border border-[#E2E8F0] p-4 sm:p-5">
+              <h2 className="font-display font-bold text-[18px] text-[#0A1F44]">{item.title}</h2>
+              <p className="text-[15px] text-[#1B2432] mt-1 leading-[1.55]">{item.body}</p>
             </div>
-          </div>
-        ))}
-      </section>
-
-      {/* FAQ */}
-      <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200/70 p-5 sm:p-7">
-        <h3 className="font-bold text-slate-800 font-display text-lg mb-3">Common questions</h3>
-        <div className="divide-y divide-slate-100">
-          {FAQ.map((f, i) => (
-            <details key={i} className="group py-3">
-              <summary className="flex items-center justify-between cursor-pointer list-none font-semibold text-slate-700 text-sm">
-                {f.q}
-                <svg className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0 ml-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-              </summary>
-              <p className="text-slate-600 text-sm mt-2 leading-relaxed">{f.a}</p>
-            </details>
           ))}
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-gradient-to-br from-brand-navy-deep via-brand-navy to-brand-navy-dk rounded-2xl shadow-lg p-6 sm:p-7 text-center">
-        <h3 className="text-white font-bold text-lg font-display">Rather just talk to a person?</h3>
-        <p className="text-blue-100 text-sm mt-1 mb-4">Bill Layne Insurance has served all 100 NC counties since 2005. Call or email any time.</p>
-        <div className="flex flex-col sm:flex-row gap-2.5 justify-center">
-          <a href={AGENCY.phoneHref} className="px-6 py-3 rounded-xl bg-gold-grad text-brand-navy-deep font-bold text-sm hover:bg-gold-grad-hover transition-all shadow-glow-gold">
-            Call {AGENCY.phone}
-          </a>
-          <a href={AGENCY.emailHref} className="px-6 py-3 rounded-xl bg-white/10 text-white font-semibold text-sm hover:bg-white/20 transition-colors">
-            Email Us
-          </a>
+      {/* How It Works */}
+      <section
+        aria-labelledby="how-it-works-docs-heading"
+        className="bg-white rounded-[20px] border border-[#E2E8F0] shadow-[0_8px_24px_rgba(10,31,68,0.06)] p-6 sm:p-8"
+      >
+        <h2 id="how-it-works-docs-heading" className="font-display font-bold text-[22px] sm:text-[26px] text-[#0A1F44] mb-4">
+          From photos to a clearer picture
+        </h2>
+        <div className="space-y-4">
+          {STEPS.map((s) => (
+            <div key={s.n} className="flex gap-4 items-start">
+              <span className="shrink-0 w-10 h-10 rounded-full bg-[#E8B84B] text-[#0A1F44] font-display font-extrabold text-[18px] flex items-center justify-center">
+                {s.n}
+              </span>
+              <div>
+                <h3 className="font-display font-bold text-[18px] text-[#0A1F44]">{s.title}</h3>
+                <p className="text-[#6B7280] text-[15px] mt-0.5 leading-[1.55]">{s.body}</p>
+              </div>
+            </div>
+          ))}
         </div>
+      </section>
+
+      {/* Contact CTA */}
+      <section className="bg-[#0A1F44] rounded-[20px] p-6 sm:p-8 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 className="text-white font-bold text-[20px] sm:text-[22px] font-display">
+            Questions about your policy or deductible?
+          </h2>
+          <p className="text-white/85 text-[15px] mt-1">
+            Talk with {AGENCY.name} in Elkin, NC.
+          </p>
+        </div>
+        <a
+          href={AGENCY.phoneHref}
+          className="min-h-[52px] px-6 py-3.5 rounded-[12px] bg-[#E8B84B] hover:bg-[#D4A93C] text-[#0A1F44] font-bold text-[16px] inline-flex items-center justify-center gap-2 transition-colors shrink-0"
+        >
+          Call {AGENCY.phoneDisplay}
+        </a>
       </section>
     </div>
   );
 };
 
 export default ArchitectureDocs;
+

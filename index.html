@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#003f87">
-    <title>AutoEstimate NC — Free AI Auto Body Repair Estimate | Elkin &amp; Surry County NC</title>
-    <meta name="description" content="Free AI auto body repair estimate from Bill Layne Insurance in Elkin, NC. Snap photos of your vehicle damage for a preliminary repair-cost guide, get a body-shop estimate explained in plain English, or compare two estimates side by side. No login required." />
+    <meta name="theme-color" content="#0A1F44">
+    <title>AutoEstimate NC — Photo-Based Repair Cost Guide &amp; Estimate Explainer | Bill Layne Insurance</title>
+    <meta name="description" content="Upload vehicle damage photos for a preliminary repair-cost guide, get a plain-English breakdown of a shop estimate, or compare two repair estimates with AutoEstimate NC by Bill Layne Insurance in Elkin, NC." />
     <link rel="canonical" href="https://autoestimatenc.com/" />
     <meta name="robots" content="index, follow" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="AutoEstimate NC" />
-    <meta property="og:title" content="AutoEstimate NC — Free AI Auto Repair Estimate" />
-    <meta property="og:description" content="Snap a photo of your car damage and get a free, preliminary repair-cost guide in about a minute. From Bill Layne Insurance, Elkin NC." />
+    <meta property="og:title" content="AutoEstimate NC — Car Damage? Get a Clearer Starting Point." />
+    <meta property="og:description" content="Upload photos for a preliminary repair-cost guide—or get help understanding and comparing shop estimates. By Bill Layne Insurance in Elkin, NC." />
     <meta property="og:url" content="https://autoestimatenc.com/" />
     <meta property="og:image" content="https://autoestimatenc.com/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
@@ -21,11 +21,11 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="AutoEstimate NC — Free AI Auto Repair Estimate" />
-    <meta name="twitter:description" content="Snap a photo of your car damage and get a free, preliminary repair-cost guide in about a minute." />
+    <meta name="twitter:title" content="AutoEstimate NC — Car Damage? Get a Clearer Starting Point." />
+    <meta name="twitter:description" content="Upload photos for a preliminary repair-cost guide—or get help understanding a shop estimate." />
     <meta name="twitter:image" content="https://autoestimatenc.com/og-image.jpg" />
 
-    <!-- Structured data: WebApplication + InsuranceAgency (NAP) -->
+    <!-- Structured data: WebApplication + InsuranceAgency (NAP) + FAQPage -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -38,14 +38,15 @@
           "operatingSystem": "Web",
           "browserRequirements": "Requires JavaScript",
           "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-          "description": "Free AI tool to estimate auto body repair costs from photos, explain a body-shop estimate in plain English, or compare two repair estimates.",
+          "description": "Free photo-based estimate guide to review preliminary vehicle repair-cost guidance, explain a repair estimate in plain English, or compare two repair estimates.",
           "provider": { "@id": "https://www.billlayneinsurance.com/#agency" }
         },
         {
           "@type": "InsuranceAgency",
           "@id": "https://www.billlayneinsurance.com/#agency",
           "name": "Bill Layne Insurance Agency",
-          "image": "https://i.imgur.com/lxu9nfT.png",
+          "image": "https://img.billlayneinsurance.com/i/2026/08/bli-agency-logo-4jqj2j.png",
+          "logo": "https://img.billlayneinsurance.com/i/2026/08/bli-agency-logo-4jqj2j.png",
           "url": "https://www.billlayneinsurance.com",
           "telephone": "+1-336-835-1993",
           "email": "Save@BillLayneInsurance.com",
@@ -65,23 +66,27 @@
           "mainEntity": [
             {
               "@type": "Question",
-              "name": "Is this an official insurance estimate?",
-              "acceptedAnswer": { "@type": "Answer", "text": "No — it's a free, preliminary guide to help you understand likely costs before you file a claim. Your final repair cost is set by a licensed body shop and your insurance adjuster." }
+              "name": "What photos should I upload?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Take clear photos of the damaged area from several angles, including a wider view of the vehicle and close-ups. Follow the upload instructions shown in the tool."
+              }
             },
             {
               "@type": "Question",
-              "name": "Will using this raise my rates or start a claim?",
-              "acceptedAnswer": { "@type": "Answer", "text": "Not at all. Nothing here files a claim or contacts your insurance company. It's just information for you." }
+              "name": "Can photos show all damage?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Damage behind panels or inside components may not be visible. A repair shop’s inspection can identify additional work."
+              }
             },
             {
               "@type": "Question",
-              "name": "Do I need an account?",
-              "acceptedAnswer": { "@type": "Answer", "text": "No — there's no login and no sign-up. It's free to use as many times as you like." }
-            },
-            {
-              "@type": "Question",
-              "name": "What if I already have a body-shop estimate?",
-              "acceptedAnswer": { "@type": "Answer", "text": "Use the Explain My Estimate tool to translate the jargon into plain English, or Compare Two Estimates to see why two shops priced it differently." }
+              "name": "Does this submit an insurance claim?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Using this estimate tool does not submit an insurance claim. Contact your insurer or our agency if you want help with the claims process."
+              }
             }
           ]
         }
@@ -91,48 +96,43 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
               brand: {
-                navy:       '#003f87',
-                'navy-dk':  '#012a5e',
-                'navy-deep':'#001a3d',
-                gold:       '#C8A84E',
-                'gold-lt':  '#E0C878',
+                navy:       '#0A1F44',
+                'navy-dk':  '#122A52',
+                'navy-deep':'#0A1F44',
+                gold:       '#E8B84B',
+                'gold-lt':  '#D4A93C',
               }
             },
             fontFamily: {
-              display: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
-              sans:    ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+              display: ['"Bricolage Grotesque"', 'Arial', 'sans-serif'],
+              sans:    ['"Outfit"', 'Arial', 'sans-serif'],
             },
             keyframes: {
-              fadeIn:  { '0%': { opacity: '0', transform: 'translateY(8px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-              floaty:  { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+              fadeIn:  { '0%': { opacity: '0', transform: 'translateY(6px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
             },
             animation: {
-              fadeIn: 'fadeIn 0.5s ease-out both',
-              floaty: 'floaty 6s ease-in-out infinite',
+              fadeIn: 'fadeIn 0.35s ease-out both',
             },
-            // Softer, layered "floaty" shadows borrowed from sendbilldocs —
-            // overrides the default sm/md/lg/xl so all existing cards upgrade automatically.
             boxShadow: {
-              sm: '0 2px 10px rgba(13,35,73,0.06)',
-              DEFAULT: '0 12px 35px rgba(13,35,73,0.08)',
-              md: '0 12px 35px rgba(13,35,73,0.08)',
-              lg: '0 18px 50px rgba(10,31,66,0.12)',
-              xl: '0 22px 70px rgba(10,31,66,0.16)',
-              'glow-gold': '0 12px 28px rgba(200,168,78,0.40)',
-              'glow-navy': '0 14px 34px rgba(0,63,135,0.28)',
+              sm: '0 2px 10px rgba(10,31,68,0.05)',
+              DEFAULT: '0 8px 24px rgba(10,31,68,0.06)',
+              md: '0 8px 24px rgba(10,31,68,0.06)',
+              lg: '0 14px 36px rgba(10,31,68,0.10)',
+              xl: '0 20px 50px rgba(10,31,68,0.14)',
+              'glow-gold': '0 8px 20px rgba(232,184,75,0.32)',
+              'glow-navy': '0 10px 28px rgba(10,31,68,0.22)',
             },
             backgroundImage: {
-              'gold-grad': 'linear-gradient(180deg, #E0C878, #C8A84E)',
-              'gold-grad-hover': 'linear-gradient(180deg, #EBD89A, #D4B65E)',
+              'gold-grad': 'linear-gradient(180deg, #E8B84B, #D4A93C)',
+              'gold-grad-hover': 'linear-gradient(180deg, #D4A93C, #C2982D)',
             },
-            // Gentle radius bump (16px → 20px) for softer, friendlier cards.
             borderRadius: {
               '2xl': '1.25rem',
             },
@@ -141,62 +141,70 @@
       }
     </script>
     <style>
-        html { -webkit-text-size-adjust: 100%; }
-        body {
-          font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-          /* Soft brand-tinted page background so white cards have depth on mobile */
-          background-color: #eef2f8;
-          background-image:
-            radial-gradient(60rem 60rem at 100% -10%, rgba(0,63,135,0.10), transparent 60%),
-            radial-gradient(50rem 50rem at -10% 110%, rgba(200,168,78,0.10), transparent 55%);
-          background-attachment: fixed;
+        html {
+          -webkit-text-size-adjust: 100%;
+          scroll-behavior: smooth;
         }
-        h1, h2, h3, .font-display { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
-        /* Keep inputs >=16px so iOS doesn't auto-zoom on focus (also set in components) */
+        body {
+          font-family: 'Outfit', Arial, sans-serif;
+          background-color: #FFFFFF;
+          color: #1B2432;
+        }
+        h1, h2, h3, .font-display {
+          font-family: 'Bricolage Grotesque', Arial, sans-serif;
+        }
         input, select, textarea { font-size: 16px; }
-        /* Respect notch / home indicator on phones */
         .safe-b { padding-bottom: env(safe-area-inset-bottom); }
+        @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto; }
+          *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+          }
+        }
     </style>
 </head>
-<body class="text-slate-900 antialiased">
+<body class="text-[#1B2432] antialiased bg-white">
     <div id="root"><!-- Prerendered SEO/content fallback. React (createRoot) replaces this with the interactive app on load; crawlers and no-JS visitors read the real content below. -->
-      <main style="max-width:760px;margin:0 auto;padding:40px 22px;font-family:system-ui,'Segoe UI',Arial,sans-serif;color:#0f172a;line-height:1.6">
-        <p style="color:#9a7d2f;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px;margin:0">Free AI Tool · No login</p>
-        <h1 style="font-size:30px;font-weight:800;color:#003f87;margin:6px 0 12px">Free AI Auto Body Repair Estimate in North Carolina</h1>
-        <p style="font-size:17px">Wrecked or dinged? Snap a few photos of your vehicle damage and get a friendly, preliminary auto body repair estimate in about a minute — so you can decide whether it's worth filing a claim. A free tool from <strong>Bill Layne Insurance Agency</strong> in Elkin, NC.</p>
+      <main style="max-width:760px;margin:0 auto;padding:40px 20px;font-family:'Outfit',Arial,sans-serif;color:#1B2432;line-height:1.6">
+        <p style="color:#0A1F44;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:12px;margin:0">FREE PHOTO-BASED ESTIMATE GUIDE</p>
+        <h1 style="font-family:'Bricolage Grotesque',Arial,sans-serif;font-size:34px;font-weight:800;color:#0A1F44;margin:8px 0 12px;line-height:1.1">Car damage? Get a clearer starting point.</h1>
+        <p style="font-size:17px">Upload photos for a preliminary repair-cost guide—or get help understanding a shop estimate. Provided by <strong>Bill Layne Insurance Agency</strong> in Elkin, NC.</p>
 
-        <h2 style="font-size:21px;color:#003f87;margin-top:26px">What you can do</h2>
+        <h2 style="font-family:'Bricolage Grotesque',Arial,sans-serif;font-size:24px;color:#0A1F44;margin-top:28px">What would you like help with?</h2>
         <ul>
-          <li><strong>Get a Repair Estimate</strong> — snap photos of the damage and get a preliminary repair-cost guide based on current North Carolina parts and labor rates.</li>
-          <li><strong>Explain My Estimate</strong> — already have a body-shop estimate? We translate the confusing jargon into plain English.</li>
-          <li><strong>Compare Two Estimates</strong> — got quotes from two shops? See exactly why the prices differ, side by side.</li>
-          <li><strong><a href="/home/" style="color:#003f87">Home Repair &amp; Project Estimates</a></strong> — new! Photo storm damage or a planned upgrade (roof, deck, siding, water damage) and get a preliminary NC cost range.</li>
+          <li><strong>Estimate damage from photos</strong> — Start with photos of your vehicle.</li>
+          <li><strong>Explain a repair estimate</strong> — Get a plain-English breakdown.</li>
+          <li><strong>Compare two estimates</strong> — Review differences in parts, labor, and scope.</li>
+          <li><strong><a href="/home/" style="color:#0A1F44">Home repair &amp; projects</a></strong> — Explore the home-estimate tool.</li>
         </ul>
 
-        <h2 style="font-size:21px;color:#003f87;margin-top:26px">How it works</h2>
+        <h2 style="font-family:'Bricolage Grotesque',Arial,sans-serif;font-size:24px;color:#0A1F44;margin-top:28px">From photos to a clearer picture.</h2>
         <ol>
-          <li>Tell us a little about your car — year, make, model and mileage.</li>
-          <li>Snap a few photos of the damage — a wide shot, a close-up and a different angle.</li>
-          <li>Get your preliminary estimate using current NC market pricing.</li>
+          <li><strong>Upload your photos</strong> — Share clear photos of the damage to your vehicle.</li>
+          <li><strong>Review the cost guide</strong> — Review preliminary repair-cost guidance based on your photos.</li>
+          <li><strong>Choose your next step</strong> — Use the results to prepare questions or compare with a shop estimate.</li>
         </ol>
 
-        <h2 style="font-size:21px;color:#003f87;margin-top:26px">Common questions</h2>
-        <h3 style="font-size:16px;margin-bottom:2px">Is this an official insurance estimate?</h3>
-        <p style="margin-top:0">No — it's a free, preliminary guide to help you understand likely costs before you file a claim. Your final repair cost is set by a licensed body shop and your insurance adjuster.</p>
-        <h3 style="font-size:16px;margin-bottom:2px">Will using this raise my rates or start a claim?</h3>
-        <p style="margin-top:0">Not at all. Nothing here files a claim or contacts your insurance company.</p>
-        <h3 style="font-size:16px;margin-bottom:2px">Do I need an account?</h3>
-        <p style="margin-top:0">No — no login, no sign-up, free to use.</p>
+        <h2 style="font-family:'Bricolage Grotesque',Arial,sans-serif;font-size:24px;color:#0A1F44;margin-top:28px">Helpful answers</h2>
+        <h3 style="font-size:17px;margin-bottom:4px;color:#0A1F44">What photos should I upload?</h3>
+        <p style="margin-top:0">Take clear photos of the damaged area from several angles, including a wider view of the vehicle and close-ups. Follow the upload instructions shown in the tool.</p>
+        <h3 style="font-size:17px;margin-bottom:4px;color:#0A1F44">Can photos show all damage?</h3>
+        <p style="margin-top:0">No. Damage behind panels or inside components may not be visible. A repair shop’s inspection can identify additional work.</p>
+        <h3 style="font-size:17px;margin-bottom:4px;color:#0A1F44">Does this submit an insurance claim?</h3>
+        <p style="margin-top:0">Using this estimate tool does not submit an insurance claim. Contact your insurer or our agency if you want help with the claims process.</p>
 
-        <h2 style="font-size:21px;color:#003f87;margin-top:26px">Bill Layne Insurance Agency</h2>
+        <h2 style="font-family:'Bricolage Grotesque',Arial,sans-serif;font-size:22px;color:#0A1F44;margin-top:28px">Bill Layne Insurance Agency</h2>
         <p>1283 N Bridge St, Elkin, NC 28621<br>
-        Phone: <a href="tel:+13368351993" style="color:#003f87">(336) 835-1993</a><br>
-        Email: <a href="mailto:Save@BillLayneInsurance.com" style="color:#003f87">Save@BillLayneInsurance.com</a><br>
-        Serving all 100 North Carolina counties since 2005.</p>
+        Phone: <a href="tel:+13368351993" style="color:#0A1F44">336-835-1993</a><br>
+        Email: <a href="mailto:Save@BillLayneInsurance.com" style="color:#0A1F44">Save@BillLayneInsurance.com</a></p>
 
-        <p style="font-size:12px;color:#64748b;margin-top:22px">Estimates are a preliminary AI guide based on photos and NC market averages — not a professional appraisal. Loading the interactive tool…</p>
+        <p style="font-size:13px;color:#6B7280;margin-top:22px">AI-generated estimates are preliminary and do not determine coverage or claim payments.</p>
       </main>
     </div>
     <script type="module" src="/index.tsx"></script>
 </body>
 </html>
+
