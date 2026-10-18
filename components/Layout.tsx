@@ -302,6 +302,24 @@ const Layout: React.FC<LayoutProps> = ({ children, activeStep, setStep, variant 
                       <span className="text-[#6B7280]">→</span>
                     </a>
                   </li>
+                  <li>
+                    <a
+                      href="https://www.billlayneinsurance.com/auto-center/sdip-points-calculator/"
+                      className="min-h-[44px] px-3 py-2 rounded-[10px] hover:bg-[#FAF7F0] text-[#0A1F44] font-semibold text-[15px] flex items-center justify-between transition-colors"
+                    >
+                      <span>NC Points Calculator (DMV &amp; SDIP)</span>
+                      <span className="text-[#6B7280]">→</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://dec-page-decoder.pages.dev/"
+                      className="min-h-[44px] px-3 py-2 rounded-[10px] hover:bg-[#FAF7F0] text-[#0A1F44] font-semibold text-[15px] flex items-center justify-between transition-colors"
+                    >
+                      <span>NC Dec Page Decoder</span>
+                      <span className="text-[#6B7280]">→</span>
+                    </a>
+                  </li>
                 </ul>
               </div>
 
